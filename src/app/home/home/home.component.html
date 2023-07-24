@@ -1,0 +1,29 @@
+<div class="backgroundImage">
+  <div class="container">
+    <div class="row mx-0 mb-4 pt-4 justify-content-between">
+      <div class="col-6">
+        <img src="../../../../assets/images/png/logo.png" alt="" />
+      </div>
+      <div class="col-6 rheader">
+        <img src="../../../../assets/images/png/lifestyle-text.png" alt="" />
+      </div>
+    </div>
+    <app-header></app-header>
+    <div>
+      <ngb-carousel
+        *ngIf="images"
+        [showNavigationArrows]="showNavigationArrows"
+        [showNavigationIndicators]="showNavigationIndicators"
+      >
+        <ng-template ngbSlide *ngFor="let image of images">
+          <div class="picsum-img-wrapper">
+            <img [src]="image.src" alt="Random slide" class="carousel-img-size" />
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+.backgroundImage {
+  background-image: url(../../../assets/images/png/body-top.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: calc(100vh - 1px);
+  position: fixed;
+  width: 100%;
+}
+.rheader {
+  float: right;
+  margin-top: 50px;
+  width: 430px;
+  height: 90px;
+}
+.carousel-img-size {
+  width: 100%;
+}

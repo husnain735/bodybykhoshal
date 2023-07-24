@@ -1,0 +1,105 @@
+<nav
+  class="navbar navbar-expand-lg navbar-dark py-0 mb-2"
+  style="background-color: white"
+>
+  <div class="container-fluid px-0 ">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3 w-100">
+        <li [routerLink]="'/'" class="nav-item p-1" [ngClass]="router.url == '/' ? 'bg-red' : ''">
+          <a class="nav-link active" [ngClass]="router.url == '/' ? 'text-white ' : ''"  aria-current="page">Home</a>
+        </li>
+        <li class="nav-item p-1 dropdown" [ngClass]="router.url.includes('aboutUs') ? 'bg-red' : ''">
+          <a
+            class="nav-link dropdown-toggle"
+            [ngClass]="router.url.includes('aboutUs') ? 'text-white' : ''"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            About Us
+          </a>
+          <ul class="dropdown-menu">
+            <li [routerLink]="'aboutUs/body-by-khoshal'"><a class="dropdown-item">Body By Khoshal</a></li>
+            <li><a class="dropdown-item">Life style fitness</a></li>
+            <li><a class="dropdown-item">Nisanity</a></li>
+          </ul>
+        </li>
+        <li class="nav-item p-1 dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Service
+          </a>
+          <ul class="dropdown-menu">
+            <li class="nav-item dropend">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Program
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item">Nisanity</a></li>
+              </ul>
+            </li>
+            <li><a class="dropdown-item">Massage</a></li>
+            <li><a class="dropdown-item">Boxing</a></li>
+            <li><a class="dropdown-item">Balancing</a></li>
+            <li><a class="dropdown-item">Strength</a></li>
+            <li><a class="dropdown-item">Flexibility</a></li>
+            <li><a class="dropdown-item">Youth Training</a></li>
+            <li><a class="dropdown-item">Nutrition</a></li>
+            <li><a class="dropdown-item">Diet Preparation</a></li>
+          </ul>
+        </li>
+        <li class="nav-item p-1">
+          <a class="nav-link">Trainers</a>
+        </li>
+        <li class="nav-item p-1 dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Gallery
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item">Club</a></li>
+            <li><a class="dropdown-item">Members</a></li>
+            <li><a class="dropdown-item">Body by Khoshal</a></li>
+            <li><a class="dropdown-item">Nisanity</a></li>
+          </ul>
+        </li>
+        <li class="nav-item p-1">
+          <a class="nav-link">Shop</a>
+        </li>
+        <li class="nav-item p-1">
+          <a class="nav-link">Get Quotes</a>
+        </li>
+        <li class="nav-item p-1">
+          <a class="nav-link">Blog</a>
+        </li>
+        <li class="nav-item p-1">
+          <a class="nav-link">Contact Us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
