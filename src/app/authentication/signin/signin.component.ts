@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-signin',
@@ -9,18 +11,24 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 export class SigninComponent implements OnInit {
   loginForm!: UntypedFormGroup;
   
-  constructor(private formBuilder: UntypedFormBuilder,) {
+  constructor(private formBuilder: UntypedFormBuilder,
+    private authService: AuthService,
+    public router: Router,) {
     
   }
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
+      Email: ['', Validators.required],
+      Password: ['', Validators.required],
     });
   } 
 
-  
-  onSubmit() {
-    
+  login() {
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (res: any) => {
+        this.authService.setToken(res.token);
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

@@ -47,7 +47,7 @@ const icons = {
     RouterModule,
     FeatherModule.pick(icons),
     NgScrollbarModule,
-    NgbModule
+    NgbModule,
   ],
   exports: [
     FormsModule,

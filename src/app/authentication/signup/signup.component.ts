@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -10,23 +11,30 @@ export class SignupComponent implements OnInit {
 
   registerForm!: UntypedFormGroup;
 
-  constructor(private formBuilder: UntypedFormBuilder) {
+  constructor(private formBuilder: UntypedFormBuilder, 
+    private AuthService: AuthService) {
      
   }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      fname: ['', Validators.required],
-      lname: ['', Validators.required],
-      email: [
+      FirstName: ['', Validators.required],
+      LastName: ['', Validators.required],
+      Email: [
         '',
         [Validators.required, Validators.email],
       ],
-      password: ['', Validators.required],
-      phoneNumber: ['', [Validators.required]],
+      Password: ['', Validators.required],
+      PhoneNumber: ['', [Validators.required]],
     });
   }
   onSubmit() {
+    this.AuthService.RegisterUser(this.registerForm.value).subscribe({
+      next:(res: any) => {
 
+      }, error:(error: any) => {
+
+      }
+    });
   }
 }
