@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
@@ -12,7 +13,8 @@ export class SignupComponent implements OnInit {
   registerForm!: UntypedFormGroup;
 
   constructor(private formBuilder: UntypedFormBuilder, 
-    private AuthService: AuthService) {
+    private AuthService: AuthService,
+    public router: Router) {
      
   }
 
@@ -26,12 +28,19 @@ export class SignupComponent implements OnInit {
       ],
       Password: ['', Validators.required],
       PhoneNumber: ['', [Validators.required]],
+      RoleId: [2]
     });
   }
   onSubmit() {
     this.AuthService.RegisterUser(this.registerForm.value).subscribe({
       next:(res: any) => {
+        if (res.body.success == 'Email Already Exists') {
+          
+        }else {
+          this.router.navigate(['/authentication/signin']);
+        }
 
+        
       }, error:(error: any) => {
 
       }
