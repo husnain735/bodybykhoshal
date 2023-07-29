@@ -4,6 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { BodyByKhoshalComponent } from './body-by-khoshal/body-by-khoshal.component';
 import { AddToCartComponent } from './add-to-cart/add-to-cart.component';
 import { PackagesComponent } from './packages/packages.component';
+import { AuthGuard } from '../shared/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -17,16 +18,8 @@ const routes: Routes = [
       {
         path: 'add-to-cart/:id',
         component: AddToCartComponent,
-      },
-      // {
-      //   path:'aboutUs',
-      //   children: [
-      //     {
-      //       path:'body-by-khoshal',
-      //       component: BodyByKhoshalComponent
-      //     }
-      //   ]
-      // },
+        canActivate:[AuthGuard]
+      }
     ],
   },
 ];

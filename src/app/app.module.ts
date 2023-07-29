@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { SharedModule } from './shared/shared.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './shared/services/auth-Interceptor.service';
 
 
 @NgModule({
@@ -18,14 +20,20 @@ import { SharedModule } from './shared/shared.module';
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
-          return localStorage.getItem('token'); // Replace this with your token retrieval logic
+          return localStorage.getItem('token');
         },
-        allowedDomains: ['example.com'], // Replace with your domain(s)
-        disallowedRoutes: ['example.com/auth/'] // Replace with your disallowed route(s)
+        allowedDomains: ['https://localhost:7082/'],
+        disallowedRoutes: ['example.com/auth/']
       }
     })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

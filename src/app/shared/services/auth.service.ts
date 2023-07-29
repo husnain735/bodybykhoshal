@@ -33,4 +33,11 @@ export class AuthService {
   RegisterUser(obj): Observable<any> {
     return this.apiService.post(`${this.pageUrl}RegisterUser`, obj);
   }
+  removeAuthToken(): void {
+    localStorage.removeItem('token');
+  }
+  isTokenExpired(token) {
+    console.log(this.jwtHelper.getTokenExpirationDate(token));
+    return this.jwtHelper.isTokenExpired(token);
+  }
 }

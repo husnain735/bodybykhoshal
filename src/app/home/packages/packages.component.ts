@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { HomeService } from 'src/app/shared/services/home.service';
 
 @Component({
@@ -22,7 +23,7 @@ export class PackagesComponent implements OnInit {
   ];
   packages: any[] = [];
 
-  constructor(private homeService: HomeService) {}
+  constructor(private homeService: HomeService,private router: Router) {}
 
   ngOnInit() {
     this.GetPackages();
@@ -35,5 +36,9 @@ export class PackagesComponent implements OnInit {
       },
       error: (error: any) => {},
     });
+  }
+  navigateToAddToCart(PackageId){
+    localStorage.setItem('PackageId', PackageId);
+    this.router.navigate(['/home/add-to-cart/' + PackageId]);
   }
 }

@@ -26,8 +26,19 @@ export class SigninComponent implements OnInit {
   login() {
     this.authService.login(this.loginForm.value).subscribe({
       next: (res: any) => {
-        this.authService.setToken(res.token);
-        this.router.navigate(['/']);
+        if (res.token == 'Email does not exist') {
+          return false;
+        } else {
+          this.authService.setToken(res.token);
+          var PackageId = localStorage.getItem('PackageId');
+          if (PackageId != undefined) {
+            this.router.navigate(['/home/add-to-cart/' + PackageId]);
+          } else {
+            this.router.navigate(['/']);
+          }
+          
+        }
+        
       }
     });
   }

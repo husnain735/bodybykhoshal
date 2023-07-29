@@ -19,4 +19,7 @@ export class HomeService {
   GetPackage(PackageId: number){
     return this.apiService.get(`${this.pageUrl}GetPackage/${PackageId}`)
   }
+  AddToCart(PackageId: number){
+    return this.apiService.get(`${this.pageUrl}AddToCart/${PackageId}`)
+  }
 }
