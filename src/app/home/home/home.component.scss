@@ -14,3 +14,18 @@
 .carousel-img-size {
   width: 100%;
 }
+.backgroundGradiant {
+  background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%);
+  height: calc(100vh - 815px);
+}
+
+@media (max-width: 767px) {
+  .backgroundGradiant {
+    height: 0px;
+  }
+}
+@media (max-width: 991px) {
+  .backgroundGradiant {
+    height: calc(100vh - 679px);
+  }
+}

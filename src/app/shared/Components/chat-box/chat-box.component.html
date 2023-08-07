@@ -5,40 +5,35 @@
   (@slideUp.done)="isFormOpenChild && onAnimationDone()"
 >
   <div class="chat-box shadow">
-    <!-- <ng-scrollbar
-      style="height: 400px"
-      visibility="hover"
-      class="card-body chat-content"
-    > -->
-      <div #scrollMe class="card-body chat-content">
-        <div id="scrollToSection" *ngFor="let chat of chats; let i = index">
-          <div *ngIf="chat.roleId == 1" class="chat-item chat-left">
-            <span class="right-chat">{{ chat.avatar }}</span>
-            <div class="chat-details">
-              <div class="chat-text">{{ chat.content }}</div>
-              <div class="chat-time">{{ chat.timestamp | date : "HH:mm" }}</div>
-            </div>
+    <div #scrollMe class="card-body chat-content">
+      <div id="scrollToSection" *ngFor="let chat of chats; let i = index">
+        <div *ngIf="chat.roleId == 1" class="chat-item chat-left">
+          <span class="right-chat">{{ chat.senderName }}</span>
+          <div class="chat-details">
+            <div class="chat-text">{{ chat.content }}</div>
+            <div class="chat-time">{{ chat.timestamp | date : "HH:mm" }}</div>
           </div>
-          <div *ngIf="chat.roleId == 2" class="chat-item chat-right">
-            <span class="left-chat">{{ chat.avatar }}</span>
-            <div class="chat-details">
-              <div class="chat-text">{{ chat.content }}</div>
-              <div class="chat-time">{{ chat.timestamp | date : "HH:mm" }}</div>
-            </div>
+        </div>
+        <div *ngIf="chat.roleId == 2" class="chat-item chat-right">
+          <span class="left-chat">{{ chat.senderName }}</span>
+          <div class="chat-details">
+            <div class="chat-text">{{ chat.content }}</div>
+            <div class="chat-time">{{ chat.timestamp | date : "HH:mm" }}</div>
           </div>
         </div>
       </div>
-    <!-- </ng-scrollbar> -->
+    </div>
     <div class="card-footer chat-form">
       <form id="chat-form">
         <input
+          style="padding-right: 60px"
           type="text"
           class="form-control"
           placeholder="Type a message"
           name="chat"
           [(ngModel)]="chat"
         />
-        <button class="btn btn-primary" (click)="saveChat()">
+        <button class="btn btn-danger" (click)="saveChat()">
           <i class="far fa-paper-plane"></i>
         </button>
       </form>

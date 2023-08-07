@@ -4,17 +4,17 @@
 
   &.pricing-highlight {
     .pricing-title {
-      background-color: color(primary);
+      background-color: color(red);
       color: #fff;
     }
 
     .pricing-cta {
       a {
-        background-color: color(primary);
+        background-color: color(red);
         color: #fff;
 
         &:hover {
-          background-color: color_darken(primary, 10%) !important;
+          background-color: color_darken(red, 10%) !important;
         }
       }
     }
@@ -30,7 +30,7 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     background-color: color_lighten(light, 5%);
-    color: color(primary);
+    color: color(red);
     border-radius: 0 0 3px 3px;
     display: inline-block;
     padding: 5px 15px;
@@ -105,6 +105,7 @@ $color_orange: #ffa442;
 $color_blue: #4b64ff;
 $color_red: #ff4b4b;
 $color_green: #40c952;
+$custom_red: color(red);
 
 .pricingTable {
   text-align: center;

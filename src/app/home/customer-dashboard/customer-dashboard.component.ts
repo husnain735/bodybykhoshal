@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HomeService } from 'src/app/shared/services/home.service';
@@ -5,7 +6,7 @@ import { HomeService } from 'src/app/shared/services/home.service';
 @Component({
   selector: 'app-customer-dashboard',
   templateUrl: './customer-dashboard.component.html',
-  styleUrls: ['./customer-dashboard.component.scss'],
+  styleUrls: ['./customer-dashboard.component.scss']
 })
 export class CustomerDashboardComponent implements OnInit {
   PackageId: number = 0;
@@ -13,7 +14,11 @@ export class CustomerDashboardComponent implements OnInit {
   counterValue: string;
   animationFrameId: number | undefined;
   isFormOpen: boolean = false;
-  
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+
   constructor(private homeService: HomeService, private ngZone: NgZone) {}
 
   ngOnInit() {
@@ -39,7 +44,11 @@ export class CustomerDashboardComponent implements OnInit {
     date.setDate(date.getDate() + daysToAdd);
     return date;
   }
+  startCounter(resultDate) {
+    this.ngZone.runOutsideAngular(() => this.updateCounter(resultDate));
+  }
   updateCounter(resultDate) {
+    
     const currentDate = new Date();
     const difference = resultDate.getTime() - currentDate.getTime();
     if (difference > 0) {
@@ -49,6 +58,10 @@ export class CustomerDashboardComponent implements OnInit {
       );
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      this.days = days;
+      this.hours = hours;
+      this.minutes = minutes;
+      this.seconds = seconds;
       this.counterValue = `${days}d ${hours}h ${minutes}m ${seconds}s`;
       this.animationFrameId = requestAnimationFrame(() =>
         this.updateCounter(resultDate)
@@ -57,7 +70,5 @@ export class CustomerDashboardComponent implements OnInit {
       this.counterValue = 'Reached the target date!';
     }
   }
-  startCounter(resultDate) {
-    this.ngZone.runOutsideAngular(() => this.updateCounter(resultDate));
-  }
+ 
 }

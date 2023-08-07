@@ -260,7 +260,7 @@
   .chat-content {
     background-color: #f9f9f9 !important;
     height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-top: 25px !important;
 
     .chat-item {
@@ -276,7 +276,7 @@
 
           .chat-text {
             text-align: left;
-            background-color: color(primary);
+            background-color: #cc0000;
             color: #fff;
           }
         }

@@ -1,49 +1,45 @@
 <div class="mt-2 bg-white text-black container-height position-relative">
-  <div class="d-flex justify-content-between align-items-center p-3">
-    <div>
-      <div>
-        <span class="pricing-title-custom">
-          {{ package.packageName }}
-        </span>
+  <div class="row mx-0 pt-lg-2">
+    <ng-container *ngIf="package != undefined">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card-body">
+          <div class="pricing" style="margin-bottom: 0 !important;">
+            <div class="pricing-title">
+              {{ package.packageName }}
+            </div>
+            <div class="priceDetail">${{ package.totalPrice }}</div>
+          </div>
+        </div>
       </div>
-      <div>
-        <span class="pricing-discription-title-custom">Total Price:</span>&nbsp;
-        <span class="pricing-value-title-custom">
-          ${{ package.totalPrice }}
-        </span>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="count-down-timer">
+          <div class="wrapper">
+            <div class="description">
+              <p class="timerColor">Days</p>
+              <p class="timerColor">Hours</p>
+              <p class="timerColor">Minutes</p>
+              <p class="timerColor">Seconds</p>
+            </div>
+            <div class="times">
+              <p class="timerColor">{{ days }}</p>
+              <p class="timerColor">{{ hours }}</p>
+              <p class="timerColor">{{ minutes }}</p>
+              <p class="timerColor">{{ seconds }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <span class="pricing-discription-title-custom">Total Sessions:</span
-        >&nbsp;
-        <span class="pricing-value-title-custom">
-          {{ package.totalNumberOfSessions }}
-        </span>
-      </div>
-      <div>
-        <span class="pricing-discription-title-custom">Price Per Session:</span
-        >&nbsp;
-        <span class="pricing-value-title-custom">
-          ${{ package.pricePerSession }}
-        </span>
-      </div>
+    </ng-container>
+    <div class="chat-box-position">
+      <app-chat-box [isFormOpenChild]="isFormOpen"></app-chat-box>
     </div>
-    <div>
-      <span class="counter-value">
-        {{ counterValue }}
-      </span>
-    </div>
+    <button
+      class="chatBtn-position bg-red"
+      mat-fab
+      (click)="isFormOpen = !isFormOpen"
+    >
+      <mat-icon *ngIf="isFormOpen">chat</mat-icon>
+      <mat-icon *ngIf="!isFormOpen">chat_bubble</mat-icon>
+    </button>
   </div>
-  <hr />
-  <div class="chat-box-position">
-    <app-chat-box [isFormOpenChild]="isFormOpen"></app-chat-box>
-  </div>
-  <button
-    class="chatBtn-position"
-    mat-fab
-    color="primary"
-    (click)="isFormOpen = !isFormOpen"
-  >
-    <mat-icon *ngIf="isFormOpen">chat</mat-icon>
-    <mat-icon *ngIf="!isFormOpen">chat_bubble</mat-icon>
-  </button>
 </div>

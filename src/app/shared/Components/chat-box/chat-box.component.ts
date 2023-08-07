@@ -77,31 +77,23 @@ export class ChatBoxComponent implements OnInit {
       .GetChatWithAdmin()
       .pipe(
         switchMap((response) => {
-          this.chats = response.body.success;
-          this.chats.forEach((x) => {
-            x.avatar = this.combineFirstLettersAndUppercase(
-              x.firstName,
-              x.lastName
-            );
-          });
-          if (this.isFormOpenChild) {
-            this.scrollToBottom();
+          if (this.chats.length != response.body.success.length) {
+            if (this.isFormOpenChild) {
+              this.scrollToBottom();
+            }
           }
-          return interval(5000);
+          this.chats = response.body.success;
+          return interval(2000);
         })
       )
       .subscribe(() => {
         this.homeService.GetChatWithAdmin().subscribe((response) => {
-          this.chats = response.body.success;
-          this.chats.forEach((x) => {
-            x.avatar = this.combineFirstLettersAndUppercase(
-              x.firstName,
-              x.lastName
-            );
-          });
-          if (this.isFormOpenChild) {
-            this.scrollToBottom();
+          if (this.chats.length != response.body.success.length) {
+            if (this.isFormOpenChild) {
+              this.scrollToBottom();
+            }
           }
+          this.chats = response.body.success;
         });
       });
   }
@@ -112,21 +104,18 @@ export class ChatBoxComponent implements OnInit {
     }
   }
   saveChat() {
-    var obj = {
-      Content: this.chat,
-    };
-    this.homeService.saveChat(obj).subscribe({
-      next: (res: any) => {
-        this.chat = '';
-      },
-      error: (error: any) => {},
-    });
-  }
-  combineFirstLettersAndUppercase(str1, str2) {
-    const firstLetter1 = str1.charAt(0).toUpperCase();
-    const firstLetter2 = str2.charAt(0).toUpperCase();
-    const combined = firstLetter1 + firstLetter2;
-    return combined;
+    if (this.chat != undefined && this.chat != '') {
+      var obj = {
+        Content: this.chat,
+      };
+      this.homeService.saveChat(obj).subscribe({
+        next: (res: any) => {
+          this.chat = '';
+          this.scrollToBottom();
+        },
+        error: (error: any) => {},
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -137,9 +126,9 @@ export class ChatBoxComponent implements OnInit {
   private scrollToBottom(): void {
     try {
       setTimeout(() => {
-        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+        this.chatContainer.nativeElement.scrollTop =
+          this.chatContainer.nativeElement.scrollHeight;
       }, 0);
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 }

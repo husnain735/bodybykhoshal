@@ -1,19 +1,62 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light py-0">
   <div class="container-fluid px-0">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li [routerLink]="'/'" class="nav-item p-1" [ngClass]="router.url == '/home' || router.url.includes('add-to-cart') ? 'bg-red ' : ''">
-          <a class="nav-link active" [ngClass]="router.url == '/home' || router.url.includes('add-to-cart') ? 'text-white  ' : ''" aria-current="page">Home</a>
+        <li
+          [routerLink]="'/'"
+          class="nav-item p-1"
+          [ngClass]="
+            router.url == '/home' || router.url.includes('add-to-cart')
+              ? 'bg-red '
+              : ''
+          "
+        >
+          <a
+            class="nav-link active"
+            [ngClass]="
+              router.url == '/home' || router.url.includes('add-to-cart')
+                ? 'text-white  '
+                : ''
+            "
+            aria-current="page"
+            >Home</a
+          >
         </li>
-        <li *ngIf="authService.isLoggedIn()" [routerLink]="'/home/customer-dashboard'" class="nav-item p-1"
-          [ngClass]="router.url == '/home/customer-dashboard' ? 'bg-red ' : ''">
-          <a class="nav-link active" [ngClass]="router.url == '/home/customer-dashboard' ? 'text-white  ' : ''" aria-current="page">Customer Dashboard</a>
+        <li
+          *ngIf="authService.isLoggedIn()"
+          [routerLink]="'/home/customer-dashboard'"
+          class="nav-item p-1"
+          [ngClass]="router.url == '/home/customer-dashboard' ? 'bg-red ' : ''"
+        >
+          <a
+            class="nav-link active"
+            [ngClass]="
+              router.url == '/home/customer-dashboard' ? 'text-white  ' : ''
+            "
+            aria-current="page"
+            >Customer Dashboard</a
+          >
         </li>
       </ul>
+      <div class="d-flex">
+        <div *ngIf="!authService.isLoggedIn()" routerLink="/authentication/signin" class="circle-icon cursor-pointer me-lg-2" title="login">
+          <mat-icon class="mat-icon-small matIconcenter">login</mat-icon>
+        </div>
+        <div *ngIf="authService.isLoggedIn()" (click)="logout()" class="circle-icon cursor-pointer me-lg-2" title="logout">
+          <mat-icon class="mat-icon-small matIconcenter">logout</mat-icon>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
