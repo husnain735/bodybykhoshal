@@ -5,6 +5,7 @@ import { BodyByKhoshalComponent } from './body-by-khoshal/body-by-khoshal.compon
 import { AddToCartComponent } from './add-to-cart/add-to-cart.component';
 import { PackagesComponent } from './packages/packages.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
+import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
       {
         path: 'add-to-cart/:id',
         component: AddToCartComponent,
+        canActivate:[AuthGuard]
+      },
+      {
+        path: 'customer-dashboard',
+        component: CustomerDashboardComponent,
         canActivate:[AuthGuard]
       }
     ],

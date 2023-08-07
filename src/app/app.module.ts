@@ -7,11 +7,12 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { SharedModule } from './shared/shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/services/auth-Interceptor.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +26,8 @@ import { AuthInterceptor } from './shared/services/auth-Interceptor.service';
         allowedDomains: ['https://localhost:7082/'],
         disallowedRoutes: ['example.com/auth/']
       }
-    })
+    }),
+    BrowserAnimationsModule
   ],
   providers: [
     {

@@ -22,4 +22,10 @@ export class HomeService {
   AddToCart(PackageId: number){
     return this.apiService.get(`${this.pageUrl}AddToCart/${PackageId}`)
   }
+  GetChatWithAdmin(){
+    return this.apiService.get(`${this.pageUrl}GetChatWithAdmin`)
+  }
+  saveChat(obj: any){
+    return this.apiService.post(`${this.pageUrl}saveChat/`, obj);
+  }
 }

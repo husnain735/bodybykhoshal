@@ -37,7 +37,6 @@ export class AuthService {
     localStorage.removeItem('token');
   }
   isTokenExpired(token) {
-    console.log(this.jwtHelper.getTokenExpirationDate(token));
     return this.jwtHelper.isTokenExpired(token);
   }
 }

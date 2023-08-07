@@ -1,0 +1,51 @@
+// ::ng-deep {
+//   .ng-scroll-content {
+//     padding: 8px !important;
+//   }
+// }
+@keyframes slideUpAnimation {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownAnimation {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.form-popup {
+  animation: slideUpAnimation 0.5s;
+}
+
+.form-popup-closed {
+  animation: slideDownAnimation 0.5s;
+}
+
+.left-chat {
+  background: #e5e5e5;
+  border-radius: 50%;
+  float: right;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.right-chat {
+  background: #e5e5e5;
+  border-radius: 50%;
+  float: left;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -77,8 +77,14 @@
     > img {
       float: right;
     }
+    > .avatar {
+      float: right;
+    }
     &.chat-right {
       img {
+        float: left;
+      }
+      .avatar {
         float: left;
       }
       .chat-details {

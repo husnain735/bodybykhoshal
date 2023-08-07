@@ -1,0 +1,38 @@
+.pricing-title-custom {
+  background-color: #6777ef;
+  color: #fff;
+  padding: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+}
+.pricing-discription-title-custom {
+  font-size: 16px;
+  font-weight: 500;
+}
+.pricing-value-title-custom {
+  font-size: 18px;
+  font-weight: 500;
+}
+.counter-value {
+  font-size: 30px;
+  color: red;
+  font-weight: 500;
+}
+.container-height {
+  height: calc(100vh - 265px);
+}
+.chat-box-position {
+  position: absolute;
+  bottom: 65px;
+  left: auto;
+  right: 10px;
+  width: 35%;
+}
+.chatBtn-position {
+  position: absolute;
+  bottom: 4px;
+  left: auto;
+  right: 4px;
+}

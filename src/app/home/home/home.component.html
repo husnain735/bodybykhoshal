@@ -1,6 +1,8 @@
 <div class="backgroundImage">
   <div class="container-lg container-md px-0">
-    <div class="d-lg-flex d-md-flex d-sm-none d-none row mx-0 mb-4 pt-4 justify-content-between">
+    <div
+      class="d-lg-flex d-md-flex d-sm-none d-none row mx-0 mb-4 pt-4 justify-content-between"
+    >
       <div class="col-6">
         <img src="../../../../assets/images/png/logo.png" alt="" />
       </div>
@@ -10,7 +12,13 @@
     </div>
     <app-header></app-header>
     <div>
-      <router-outlet></router-outlet>
+      <ng-scrollbar
+        style="height: calc(100vh - 206px)"
+        visibility="hover"
+        class="card-body chat-content"
+      >
+        <router-outlet></router-outlet>
+      </ng-scrollbar>
     </div>
   </div>
 </div>

@@ -19,6 +19,8 @@ import {
 import { HeaderComponent } from './Components/header/header.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChatBoxComponent } from './Components/chat-box/chat-box.component';
+import { MaterialModule } from 'src/material/material.module';
 
 
 const icons = {
@@ -37,6 +39,7 @@ const icons = {
 @NgModule({
   declarations: [
     HeaderComponent,
+    ChatBoxComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +51,7 @@ const icons = {
     FeatherModule.pick(icons),
     NgScrollbarModule,
     NgbModule,
+    MaterialModule,
   ],
   exports: [
     FormsModule,
@@ -56,7 +60,9 @@ const icons = {
     FeatherModule,
     HeaderComponent,
     NgScrollbarModule,
-    NgbModule
+    NgbModule,
+    ChatBoxComponent,
+    MaterialModule
   ]
 })
 export class SharedModule { }

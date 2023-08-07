@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { BodyByKhoshalComponent } from './body-by-khoshal/body-by-khoshal.component';
 import { AddToCartComponent } from './add-to-cart/add-to-cart.component';
 import { PackagesComponent } from './packages/packages.component';
+import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { PackagesComponent } from './packages/packages.component';
     HomeComponent,
     BodyByKhoshalComponent,
     AddToCartComponent,
-    PackagesComponent
+    PackagesComponent,
+    CustomerDashboardComponent
   ],
   imports: [
     CommonModule,

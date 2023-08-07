@@ -1,0 +1,49 @@
+<div class="mt-2 bg-white text-black container-height position-relative">
+  <div class="d-flex justify-content-between align-items-center p-3">
+    <div>
+      <div>
+        <span class="pricing-title-custom">
+          {{ package.packageName }}
+        </span>
+      </div>
+      <div>
+        <span class="pricing-discription-title-custom">Total Price:</span>&nbsp;
+        <span class="pricing-value-title-custom">
+          ${{ package.totalPrice }}
+        </span>
+      </div>
+      <div>
+        <span class="pricing-discription-title-custom">Total Sessions:</span
+        >&nbsp;
+        <span class="pricing-value-title-custom">
+          {{ package.totalNumberOfSessions }}
+        </span>
+      </div>
+      <div>
+        <span class="pricing-discription-title-custom">Price Per Session:</span
+        >&nbsp;
+        <span class="pricing-value-title-custom">
+          ${{ package.pricePerSession }}
+        </span>
+      </div>
+    </div>
+    <div>
+      <span class="counter-value">
+        {{ counterValue }}
+      </span>
+    </div>
+  </div>
+  <hr />
+  <div class="chat-box-position">
+    <app-chat-box [isFormOpenChild]="isFormOpen"></app-chat-box>
+  </div>
+  <button
+    class="chatBtn-position"
+    mat-fab
+    color="primary"
+    (click)="isFormOpen = !isFormOpen"
+  >
+    <mat-icon *ngIf="isFormOpen">chat</mat-icon>
+    <mat-icon *ngIf="!isFormOpen">chat_bubble</mat-icon>
+  </button>
+</div>

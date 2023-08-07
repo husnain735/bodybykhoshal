@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +20,7 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
-  constructor(public router: Router) {
+  constructor(public router: Router,public authService: AuthService) {
 
   }
 
