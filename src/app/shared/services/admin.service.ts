@@ -14,4 +14,10 @@ export class AdminService {
   GetAllCustomers(): Observable<any>{
     return this.apiService.get(`${this.pageUrl}GetAllCustomers`);
   }
+  GetAdminChatWithCustomer(obj: any){
+    return this.apiService.post(`${this.pageUrl}GetAdminChatWithCustomer/`, obj);
+  }
+  saveChatForAdmin(obj: any){
+    return this.apiService.post(`${this.pageUrl}saveChatForAdmin/`, obj);
+  }
 }

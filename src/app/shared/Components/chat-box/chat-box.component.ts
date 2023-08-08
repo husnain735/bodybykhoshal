@@ -1,9 +1,11 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -18,6 +20,8 @@ import {
 } from '@angular/animations';
 import { HomeService } from '../../services/home.service';
 import { Subscription, interval, switchMap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-chat-box',
@@ -37,14 +41,18 @@ export class ChatBoxComponent implements OnInit {
   chats: any[] = [];
   @Input() isFormOpenChild: boolean = false;
   @Input() isAdminChatChild: boolean = false;
+  @Input() SenderTwo: string;
+  @Input() UserName: string;
   chatBoxHeight: string;
   private chatSubscription: Subscription;
   chat: string;
   @ViewChild('scrollMe', { static: false }) private chatContainer: ElementRef;
-
+  @Output() isAdminChatEvent: EventEmitter<boolean> = new EventEmitter();
+  
   constructor(
     private elementRef: ElementRef,
-    private homeService: HomeService
+    private homeService: HomeService,
+    private adminService: AdminService
   ) {}
 
   ngOnInit() {
@@ -127,6 +135,9 @@ export class ChatBoxComponent implements OnInit {
       this.scrollToBottom();
     }
     if (this.isAdminChatChild) {
+      if (this.SenderTwo != undefined) {
+        this.GetAdminChatWithCustomer();
+      }
       this.scrollToBottom();
     }
   }
@@ -137,5 +148,56 @@ export class ChatBoxComponent implements OnInit {
           this.chatContainer.nativeElement.scrollHeight;
       }, 0);
     } catch (err) {}
+  }
+  GetAdminChatWithCustomer() {
+    var obj = {
+      SenderTwo: this.SenderTwo
+    }
+
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+    }
+
+    this.chatSubscription = this.adminService.GetAdminChatWithCustomer(obj).pipe(
+      switchMap((response) => {
+        if (this.chats.length != response.body.length) {
+          if (this.isAdminChatChild) {
+            this.scrollToBottom();
+          }
+        }
+        this.chats = response.body;
+        return interval(2000);
+      })
+    )
+    .subscribe(() => {
+      this.adminService.GetAdminChatWithCustomer(obj).subscribe((response) => {
+        if (this.chats.length != response.body.length) {
+          if (this.isAdminChatChild) {
+            this.scrollToBottom();
+          }
+        }
+        this.chats = response.body;
+      });
+    });
+  }
+  saveChatForAdmin() {
+    var obj = {
+      SenderTwo: this.SenderTwo,
+      Content: this.chat,
+    }
+    this.adminService.saveChatForAdmin(obj).subscribe({
+      next: (res: any) => {
+        this.chat = '';
+        this.scrollToBottom();
+      }, error: (error: any) => {
+
+      }
+    })
+  }
+  closeChat() {
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+    }
+    this.isAdminChatEvent.emit(false);
   }
 }

@@ -5,16 +5,24 @@
   (@slideUp.done)="(isFormOpenChild || isAdminChatChild) && onAnimationDone()"
 >
   <div class="chat-box shadow">
+    <div *ngIf="isAdminChatChild" class="d-flex justify-content-between align-items-center p-3">
+      <div>
+        <span class="userName">{{UserName}}</span>
+      </div>
+      <div>
+        <mat-icon class="cursor-pointer" (click)="closeChat()">close</mat-icon>
+      </div>
+    </div>
     <div #scrollMe class="card-body chat-content">
       <div id="scrollToSection" *ngFor="let chat of chats; let i = index">
-        <div *ngIf="chat.roleId == 1" class="chat-item chat-left">
+        <div *ngIf="(isFormOpenChild && chat.roleId == 1) || (isAdminChatChild && chat.roleId == 2)" class="chat-item chat-left">
           <span class="right-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
             <div class="chat-text">{{ chat.content }}</div>
             <div class="chat-time">{{ chat.timestamp | date : "HH:mm" }}</div>
           </div>
         </div>
-        <div *ngIf="chat.roleId == 2" class="chat-item chat-right">
+        <div *ngIf="(isFormOpenChild && chat.roleId == 2) || (isAdminChatChild && chat.roleId == 1)" class="chat-item chat-right">
           <span class="left-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
             <div class="chat-text">{{ chat.content }}</div>
@@ -33,7 +41,7 @@
           name="chat"
           [(ngModel)]="chat"
         />
-        <button class="btn btn-danger" (click)="saveChat()">
+        <button class="btn btn-danger" (click)="isFormOpenChild ? saveChat() : isAdminChatChild ? saveChatForAdmin() : ''">
           <i class="far fa-paper-plane"></i>
         </button>
       </form>

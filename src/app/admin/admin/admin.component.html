@@ -27,7 +27,14 @@
       <div class="col-3 user-profile-container">
         <div class="pt-2">
           <div *ngFor="let user of userProfiles">
-            <div class="card mb-2 cursor-pointer card-hover" (click)="isAdminChat = true">
+            <div
+              class="card mb-2 cursor-pointer card-hover"
+              (click)="
+                isAdminChat = true;
+                selectedUserGuid = user.userGUID;
+                UserNameInChat = user.firstName + ' ' + user.lastName
+              "
+            >
               <div class="card-body">
                 <div class="d-flex gap-1 align-items-center">
                   <div>
@@ -46,6 +53,12 @@
     </div>
   </div>
   <div class="chat-box-position">
-    <app-chat-box [isAdminChatChild]="isAdminChat" [isFormOpenChild]="isFormOpen"></app-chat-box>
+    <app-chat-box
+      (isAdminChatEvent)="handleAdminChatEvent($event)"
+      [UserName]="UserNameInChat"
+      [SenderTwo]="selectedUserGuid"
+      [isAdminChatChild]="isAdminChat"
+      [isFormOpenChild]="isFormOpen"
+    ></app-chat-box>
   </div>
 </div>

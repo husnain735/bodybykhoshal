@@ -13,7 +13,8 @@ export class AdminComponent implements OnInit {
   isFormOpen = false;
   userProfiles: any[] = [];
   isAdminChat = false;
-
+  selectedUserGuid: string;
+  UserNameInChat: string;
   constructor(private adminService: AdminService,
     public router: Router,public authService: AuthService) {
      
@@ -44,5 +45,7 @@ export class AdminComponent implements OnInit {
     const firstLetter2 = str2.charAt(0).toUpperCase();
     return firstLetter1 + firstLetter2;
   }
-  
+  handleAdminChatEvent(event) {
+    this.isAdminChat = event;
+  }
 }
