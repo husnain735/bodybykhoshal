@@ -1,8 +1,8 @@
 <div
   class="form-popup"
-  [@slideUp]="isFormOpenChild ? 'open' : 'closed'"
-  *ngIf="isFormOpenChild"
-  (@slideUp.done)="isFormOpenChild && onAnimationDone()"
+  [@slideUp]="isFormOpenChild || isAdminChatChild ? 'open' : 'closed'"
+  *ngIf="isFormOpenChild || isAdminChatChild"
+  (@slideUp.done)="(isFormOpenChild || isAdminChatChild) && onAnimationDone()"
 >
   <div class="chat-box shadow">
     <div #scrollMe class="card-body chat-content">

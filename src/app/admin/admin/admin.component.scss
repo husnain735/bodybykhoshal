@@ -1,0 +1,53 @@
+.mat-icon-small {
+  font-size: 16px;
+}
+
+.mat-icon-smaller {
+  transform: scale(0.8);
+}
+.circle-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #cc0000 !important;
+}
+.matIconcenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.avatarIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  border: black;
+  background: lightgray;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 500;
+}
+.gap-1 {
+  gap: 4px;
+}
+
+.user-profile-container {
+  overflow-y: auto;
+  height: calc(100vh - 46px);
+  border-right: 1px solid black;
+}
+.card-hover:hover {
+  transform: scale(1.02);
+}
+.chat-box-position {
+  position: absolute;
+  bottom: 65px;
+  left: auto;
+  right: 10px;
+  width: 35%;
+}

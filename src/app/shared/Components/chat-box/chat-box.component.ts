@@ -36,6 +36,7 @@ export class ChatBoxComponent implements OnInit {
   message: string = '';
   chats: any[] = [];
   @Input() isFormOpenChild: boolean = false;
+  @Input() isAdminChatChild: boolean = false;
   chatBoxHeight: string;
   private chatSubscription: Subscription;
   chat: string;
@@ -47,7 +48,10 @@ export class ChatBoxComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.GetChatWithAdmin();
+    var roleId = +localStorage.getItem('roleId');
+    if (roleId == 2) {
+      this.GetChatWithAdmin();
+    }
   }
 
   sendMessage() {
@@ -66,7 +70,7 @@ export class ChatBoxComponent implements OnInit {
     this.isFormOpenChild = false;
   }
   onAnimationDone(event: AnimationEvent) {
-    if (!this.isFormOpenChild) {
+    if (!this.isFormOpenChild && !this.isAdminChatChild) {
       const element = event.target as HTMLElement;
       element.classList.add('form-popup-closed');
     }
@@ -120,6 +124,9 @@ export class ChatBoxComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.isFormOpenChild) {
+      this.scrollToBottom();
+    }
+    if (this.isAdminChatChild) {
       this.scrollToBottom();
     }
   }

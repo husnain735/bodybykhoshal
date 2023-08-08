@@ -1,10 +1,51 @@
-<div>
-    <div class="row mx-0">
-        <div class="col-3">
-            
+<div class="position-relative">
+  <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand">Admin Dashboard</a>
+      <div class="d-flex">
+        <div
+          *ngIf="!authService.isLoggedIn()"
+          routerLink="/authentication/signin"
+          class="circle-icon cursor-pointer me-lg-2"
+          title="login"
+        >
+          <mat-icon class="mat-icon-small matIconcenter">login</mat-icon>
         </div>
-        <div class="col-9">
-            
+        <div
+          *ngIf="authService.isLoggedIn()"
+          (click)="logout()"
+          class="circle-icon cursor-pointer me-lg-2"
+          title="logout"
+        >
+          <mat-icon class="mat-icon-small matIconcenter">logout</mat-icon>
         </div>
+      </div>
     </div>
+  </nav>
+  <div>
+    <div class="row mx-0">
+      <div class="col-3 user-profile-container">
+        <div class="pt-2">
+          <div *ngFor="let user of userProfiles">
+            <div class="card mb-2 cursor-pointer card-hover" (click)="isAdminChat = true">
+              <div class="card-body">
+                <div class="d-flex gap-1 align-items-center">
+                  <div>
+                    <span class="avatarIcon">{{ user.avatar }}</span>
+                  </div>
+                  <div>
+                    <span>{{ user.firstName }}&nbsp;{{ user.lastName }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-9"></div>
+    </div>
+  </div>
+  <div class="chat-box-position">
+    <app-chat-box [isAdminChatChild]="isAdminChat" [isFormOpenChild]="isFormOpen"></app-chat-box>
+  </div>
 </div>
