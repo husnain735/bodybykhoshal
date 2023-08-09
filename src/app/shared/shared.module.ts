@@ -21,7 +21,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChatBoxComponent } from './Components/chat-box/chat-box.component';
 import { MaterialModule } from 'src/material/material.module';
-
+import { CalendarComponent } from './Components/calendar/calendar.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 const icons = {
   Facebook,
@@ -39,7 +40,8 @@ const icons = {
 @NgModule({
   declarations: [
     HeaderComponent,
-    ChatBoxComponent
+    ChatBoxComponent,
+    CalendarComponent
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ const icons = {
     NgScrollbarModule,
     NgbModule,
     MaterialModule,
+    FullCalendarModule,
   ],
   exports: [
     FormsModule,
@@ -62,7 +65,9 @@ const icons = {
     NgScrollbarModule,
     NgbModule,
     ChatBoxComponent,
-    MaterialModule
+    MaterialModule,
+    FullCalendarModule,
+    CalendarComponent
   ]
 })
 export class SharedModule { }

@@ -19,12 +19,12 @@ const routes: Routes = [
       {
         path: 'add-to-cart/:id',
         component: AddToCartComponent,
-        // canActivate:[AuthGuard]
+        canActivate:[AuthGuard]
       },
       {
         path: 'customer-dashboard',
         component: CustomerDashboardComponent,
-        // canActivate:[AuthGuard]
+        canActivate:[AuthGuard]
       }
     ],
   },
