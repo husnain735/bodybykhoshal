@@ -20,4 +20,7 @@ export class AdminService {
   saveChatForAdmin(obj: any){
     return this.apiService.post(`${this.pageUrl}saveChatForAdmin/`, obj);
   }
+  readAllMessages(obj: any){
+    return this.apiService.post(`${this.pageUrl}readAllMessages/`, obj);
+  }
 }
