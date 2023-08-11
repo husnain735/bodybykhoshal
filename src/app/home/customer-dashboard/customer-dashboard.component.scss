@@ -99,7 +99,7 @@
   }
 }
 .timerColor {
-  color: #cc0000 !important;
+  color: #ed0b0b !important;
 }
 .bg-red {
   background-color: #cc0000 !important;
@@ -111,4 +111,22 @@
 }
 .z-Index-1000 {
   z-index: 10000;
+}
+.notification-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: #cc0000;
+  color: white;
+  position: absolute;
+  top: 0;
+  left: auto;
+  right: 0;
+}
+
+.bg-gray {
+  background-color: #9f9999;
 }

@@ -101,7 +101,7 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>Start Date<span class="text-danger">*</span></label>
           <input
-            type="date"
+            type="datetime"
             class="form-control"
             placeholder="Start Date"
             formControlName="startDate"
@@ -119,13 +119,30 @@
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>End Date<span class="text-danger">*</span></label>
-          <input
-            type="date"
+          <!-- <input
+            type="datetime"
             class="form-control"
             placeholder="Start Date"
             formControlName="endDate"
             required
-          />
+          /> -->
+          <mat-form-field>
+            <input matInput [ngxMatDatetimePicker]="picker" 
+                            placeholder="Choose a date" 
+                            [formControl]="endDate"
+                            [min]="minDate" [max]="maxDate" 
+                            [disabled]="disabled">
+            <mat-datepicker-toggle matSuffix [for]="picker">
+            </mat-datepicker-toggle>
+            <ngx-mat-datetime-picker #picker 
+              [showSpinners]="showSpinners" 
+              [showSeconds]="showSeconds"
+              [stepHour]="stepHour" [stepMinute]="stepMinute" 
+              [stepSecond]="stepSecond"
+              [touchUi]="touchUi"
+              [color]="color">
+            </ngx-mat-datetime-picker>
+          </mat-form-field>
           <small
             class="form-text text-danger"
             *ngIf="

@@ -1,4 +1,11 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  TemplateRef,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -22,7 +29,10 @@ import { CalendarService } from './calendar.service';
 import { INITIAL_EVENTS } from './events-util';
 import { formatDate } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { HomeService } from '../../services/home.service';
 // import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-calendar',
@@ -46,9 +56,21 @@ export class CalendarComponent implements OnInit {
     'friends',
   ];
 
-  calendarEvents!: EventInput[];
+  @Input() calendarEvents!: EventInput[];
   tempEvents?: EventInput[];
-
+  @ViewChild('picker') picker: any;
+  public date: moment.Moment;
+  public disabled = false;
+  public showSpinners = true;
+  public showSeconds = false;
+  public touchUi = false;
+  public enableMeridian = false;
+  public minDate: moment.Moment;
+  public maxDate: moment.Moment;
+  public stepHour = 1;
+  public stepMinute = 1;
+  public stepSecond = 1;
+  public color: ThemePalette = 'primary';
   public filters = [
     { name: 'work', value: 'Work', checked: true },
     { name: 'personal', value: 'Personal', checked: true },
@@ -68,7 +90,7 @@ export class CalendarComponent implements OnInit {
     private fb: UntypedFormBuilder,
     public calendarService: CalendarService,
     private modalService: NgbModal,
-    // private toastr: ToastrService
+    private homeService: HomeService // private toastr: ToastrService
   ) {
     this.dialogTitle = 'Add New Event';
     const blankObject = {} as Calendar;
@@ -76,10 +98,12 @@ export class CalendarComponent implements OnInit {
     this.calendarForm = this.createCalendarForm(this.calendar);
   }
 
-  public ngOnInit(): void {
-    this.calendarEvents = INITIAL_EVENTS;
-    this.tempEvents = this.calendarEvents;
-    this.calendarOptions.initialEvents = this.calendarEvents;
+  ngOnInit() {
+    //this.calendarEvents = INITIAL_EVENTS;
+    //this.tempEvents = this.calendarEvents;
+    // this.calendarOptions.initialEvents = this.calendarEvents;
+    // this.tempEvents = this.calendarEvents;
+    // this.calendarOptions.initialEvents = this.calendarEvents;
   }
 
   calendarOptions: CalendarOptions = {
@@ -91,7 +115,7 @@ export class CalendarComponent implements OnInit {
     },
     initialView: 'timeGridWeek',
     weekends: true,
-    editable: true,
+    editable: false,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
@@ -254,6 +278,27 @@ export class CalendarComponent implements OnInit {
       // this.toastr.success(message, '', {
       //   positionClass: 'toast-' + ypos + '-' + xpos,
       // });
+    }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.calendarEvents != undefined && this.calendarEvents.length > 0) {
+      this.calendarEvents.forEach((x) => {
+        x.className =
+          x.statusId == 1
+            ? 'fc-event-info'
+            : x.statusId == 2
+            ? 'fc-event-success'
+            : x.statusId == 3
+            ? 'fc-event-danger'
+            : '';
+        x.groupId = 'travel';
+        x.allDay = false;
+      });
+      this.tempEvents = this.calendarEvents;
+      this.calendarOptions.initialEvents = this.calendarEvents;
+      const calendarEvents = this.calendarEvents.slice();
+      this.calendarOptions.events = calendarEvents;
+      this.calendarForm.reset();
     }
   }
 }
