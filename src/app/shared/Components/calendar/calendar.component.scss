@@ -7,8 +7,17 @@
   justify-content: end;
   gap: 4px;
 }
-::ng-deep {
+// ::ng-deep {
+//   .fc-view-harness-active {
+//     height: calc(100vh - 350px) !important;
+//   }
+// }
+
+::ng-deep .customer-calendar {
+  .fc-header-toolbar {
+    display: none;
+  }
   .fc-view-harness-active {
-    height: calc(100vh - 350px) !important;
+    height: calc(100vh - 295px) !important;
   }
 }

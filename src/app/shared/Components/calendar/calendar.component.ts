@@ -122,20 +122,27 @@ export class CalendarComponent implements OnInit {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
+    firstDay: new Date().getDay(), // Start week from the current day
+    dateIncrement: { days: 1 }, // Increment by 1 day
+    validRange: {
+      start: new Date(), // Start from the current date
+      end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000) // End after 6 days
+    }
   };
 
   handleDateSelect(selectInfo: DateSelectArg) {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
+
     if (type === 'editEvent') {
       this.dialogTitle = row.event.title;
       this.isEditClick = true;
       this.calendarForm.setValue({
         id: row.event.id,
         title: row.event.title,
-        startDate: formatDate(row.event.start, 'yyyy-MM-dd', 'en') || '',
-        endDate: formatDate(row.event.end, 'yyyy-MM-dd', 'en') || '',
+        startDate: row.event.start,
+        endDate: row.event.end,
         details: row.event.extendedProps.details,
       });
     } else {
@@ -160,68 +167,67 @@ export class CalendarComponent implements OnInit {
     }
     this.homeService.saveCustomerBooking(obj).subscribe({
       next: (res: any) => {
-        debugger
-        this.calendarEvents = this.calendarEvents.concat({
-          id: res.body,
-          title: this.calendarData.title,
-          start: this.calendarData.startDate,
-          end: this.calendarData.endDate,
-          className: 'fc-event-info',
-          details: this.calendarData.details,
-        });
-        this.calendarOptions.events = this.calendarEvents;
-        this.calendarForm.reset();
-        this.modalService.dismissAll();
+        if (res.body.id > 0) {
+          this.calendarEvents = this.calendarEvents.concat({
+            id: res.body.id,
+            title: res.body.title,
+            start: this.calendarData.startDate,
+            end: this.calendarData.endDate,
+            className: 'fc-event-info',
+            details: this.calendarData.details,
+          });
+          this.calendarOptions.events = this.calendarEvents;
+          this.calendarForm.reset();
+          this.modalService.dismissAll();
 
-        this.showNotification(
-          'success',
-          'Save Event Successfully...!!!',
-          'top',
-          'right'
-        );
+          this.showNotification(
+            'success',
+            'Save Event Successfully...!!!',
+            'top',
+            'right'
+          );
+        }
       }, error: (error: any) => {
 
       }
     })
-
-
   }
 
   eventClick(form: UntypedFormGroup) {
+
     this.calendarData = form.value;
 
     this.calendarEvents.forEach((element, index) => {
-      if (this.calendarData.id === element.id) {
+      if (+this.calendarData.id === +element.id) {
         this.saveEditEvent(index, this.calendarData);
       }
     }, this);
   }
 
   saveEditEvent(eventIndex: number, calendarData: any) {
+
     var obj = {
+      Id: calendarData.id,
       Title: calendarData.title,
       Start: calendarData.startDate,
-      End:calendarData.endDate,
+      End: calendarData.endDate,
       Details: calendarData.details
     }
     this.homeService.saveCustomerBooking(obj).subscribe({
       next: (res: any) => {
         const calendarEvents = this.calendarEvents.slice();
         const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
-        singleEvent.id = res.body;
-        singleEvent.title = calendarData.title;
+        singleEvent.id = res.body.id;
+        singleEvent.title = res.body.title;
         singleEvent.start = calendarData.startDate;
         singleEvent.end = calendarData.endDate;
         singleEvent.className = 'fc-event-info';
         singleEvent['details'] = calendarData.details;
         calendarEvents[eventIndex] = singleEvent;
         this.calendarEvents = calendarEvents;
-
         this.calendarOptions.events = calendarEvents;
-
         this.calendarForm.reset();
         this.modalService.dismissAll();
-
         this.showNotification(
           'success',
           'Edit Event Successfully...!!!',
@@ -253,7 +259,7 @@ export class CalendarComponent implements OnInit {
   createCalendarForm(calendar: Calendar): UntypedFormGroup {
     return this.fb.group({
       id: [calendar.id],
-      title: [calendar.title, [Validators.required]],
+      title: [calendar.title],
       startDate: [calendar.startDate, [Validators.required]],
       endDate: [calendar.endDate, [Validators.required]],
       details: [calendar.details],
