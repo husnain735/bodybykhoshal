@@ -48,19 +48,14 @@ export class ChatBoxComponent implements OnInit {
   chat: string;
   @ViewChild('scrollMe', { static: false }) private chatContainer: ElementRef;
   @Output() isAdminChatEvent: EventEmitter<boolean> = new EventEmitter();
-  
+
   constructor(
     private elementRef: ElementRef,
     private homeService: HomeService,
     private adminService: AdminService
   ) {}
 
-  ngOnInit() {
-    var roleId = +localStorage.getItem('roleId');
-    if (roleId == 2) {
-      this.GetChatWithAdmin();
-    }
-  }
+  ngOnInit() {}
 
   sendMessage() {
     const newMessage: Message = {
@@ -132,7 +127,15 @@ export class ChatBoxComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.isFormOpenChild) {
+      var roleId = +localStorage.getItem('roleId');
+      if (roleId == 2) {
+        this.GetChatWithAdmin();
+      }
       this.scrollToBottom();
+    } else {
+      if (this.chatSubscription) {
+        this.chatSubscription.unsubscribe();
+      }
     }
     if (this.isAdminChatChild) {
       if (this.SenderTwo != undefined) {
@@ -151,48 +154,51 @@ export class ChatBoxComponent implements OnInit {
   }
   GetAdminChatWithCustomer() {
     var obj = {
-      SenderTwo: this.SenderTwo
-    }
+      SenderTwo: this.SenderTwo,
+    };
 
     if (this.chatSubscription) {
       this.chatSubscription.unsubscribe();
     }
 
-    this.chatSubscription = this.adminService.GetAdminChatWithCustomer(obj).pipe(
-      switchMap((response) => {
-        if (this.chats.length != response.body.length) {
-          if (this.isAdminChatChild) {
-            this.scrollToBottom();
+    this.chatSubscription = this.adminService
+      .GetAdminChatWithCustomer(obj)
+      .pipe(
+        switchMap((response) => {
+          if (this.chats.length != response.body.length) {
+            if (this.isAdminChatChild) {
+              this.scrollToBottom();
+            }
           }
-        }
-        this.chats = response.body;
-        return interval(2000);
-      })
-    )
-    .subscribe(() => {
-      this.adminService.GetAdminChatWithCustomer(obj).subscribe((response) => {
-        if (this.chats.length != response.body.length) {
-          if (this.isAdminChatChild) {
-            this.scrollToBottom();
-          }
-        }
-        this.chats = response.body;
+          this.chats = response.body;
+          return interval(2000);
+        })
+      )
+      .subscribe(() => {
+        this.adminService
+          .GetAdminChatWithCustomer(obj)
+          .subscribe((response) => {
+            if (this.chats.length != response.body.length) {
+              if (this.isAdminChatChild) {
+                this.scrollToBottom();
+              }
+            }
+            this.chats = response.body;
+          });
       });
-    });
   }
   saveChatForAdmin() {
     var obj = {
       SenderTwo: this.SenderTwo,
       Content: this.chat,
-    }
+    };
     this.adminService.saveChatForAdmin(obj).subscribe({
       next: (res: any) => {
         this.chat = '';
         this.scrollToBottom();
-      }, error: (error: any) => {
-
-      }
-    })
+      },
+      error: (error: any) => {},
+    });
   }
   closeChat() {
     if (this.chatSubscription) {

@@ -32,17 +32,18 @@
   font-size: 16px;
   font-weight: 500;
 }
-.gap-1 {
-  gap: 4px;
+.gap-3 {
+  gap: 12px;
 }
 
 .user-profile-container {
   overflow-y: auto;
   height: calc(100vh - 46px);
-  border-right: 1px solid black;
+  border-left: 1px solid #cdcaca;
 }
 .card-hover:hover {
-  transform: scale(1.02);
+  background-color: rgb(231 231 231 / 51%);
+  border-radius: 12px;
 }
 .chat-box-position {
   position: absolute;
@@ -50,4 +51,18 @@
   left: auto;
   right: 10px;
   width: 35%;
+}
+.notification-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: #cc0000;
+  color: white;
+  //position: absolute;
+  top: 0;
+  left: auto;
+  right: 0;
 }

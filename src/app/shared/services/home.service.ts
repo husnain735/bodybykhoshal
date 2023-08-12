@@ -17,15 +17,24 @@ export class HomeService {
     return this.apiService.get(`${this.pageUrl}GetPackages`);
   }
   GetPackage(PackageId: number){
-    return this.apiService.get(`${this.pageUrl}GetPackage/${PackageId}`)
+    return this.apiService.get(`${this.pageUrl}GetPackage/${PackageId}`);
   }
   AddToCart(PackageId: number){
-    return this.apiService.get(`${this.pageUrl}AddToCart/${PackageId}`)
+    return this.apiService.get(`${this.pageUrl}AddToCart/${PackageId}`);
   }
   GetChatWithAdmin(){
-    return this.apiService.get(`${this.pageUrl}GetChatWithAdmin`)
+    return this.apiService.get(`${this.pageUrl}GetChatWithAdmin`);
   }
   saveChat(obj: any){
     return this.apiService.post(`${this.pageUrl}saveChat/`, obj);
+  }
+  getCustomerNotification(){
+    return this.apiService.get(`${this.pageUrl}getCustomerNotification`);
+  }
+  readAllMessages(){
+    return this.apiService.get(`${this.pageUrl}readAllMessages`);
+  }
+  getCustomerBookings(){
+    return this.apiService.get(`${this.pageUrl}getCustomerBookings`);
   }
 }

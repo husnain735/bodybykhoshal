@@ -1,3 +1,7 @@
 .carousel-img-size {
   width: 100%;
 }
+.containerHeight {
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}

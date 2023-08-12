@@ -24,32 +24,33 @@
   </nav>
   <div>
     <div class="row mx-0">
+      <div class="col-9"></div>
       <div class="col-3 user-profile-container">
         <div class="pt-2">
           <div *ngFor="let user of userProfiles">
             <div
-              class="card mb-2 cursor-pointer card-hover"
-              (click)="
-                isAdminChat = true;
-                selectedUserGuid = user.userGUID;
-                UserNameInChat = user.firstName + ' ' + user.lastName
-              "
-            >
-              <div class="card-body">
-                <div class="d-flex gap-1 align-items-center">
-                  <div>
-                    <span class="avatarIcon">{{ user.avatar }}</span>
+              class="p-2 cursor-pointer card-hover"
+              (click)="readAllMessages(user)">
+              <div class="">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex gap-3 align-items-center">
+                    <div class="position-relative">
+                      <span class="avatarIcon">{{ user.avatar }}</span>
+                    </div>
+                    <div>
+                      <span>{{ user.firstName }}&nbsp;{{ user.lastName }}</span>
+                    </div>
                   </div>
-                  <div>
-                    <span>{{ user.firstName }}&nbsp;{{ user.lastName }}</span>
+                  <div *ngIf="user.isNotify" class="notification-badge">
+                    {{user.totalNotification}}
                   </div>
+                  
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-9"></div>
     </div>
   </div>
   <div class="chat-box-position">
