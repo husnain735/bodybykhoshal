@@ -16,6 +16,7 @@ export class AdminService {
   }
   GetAdminChatWithCustomer(obj: any){
     return this.apiService.post(`${this.pageUrl}GetAdminChatWithCustomer/`, obj);
+    return null;
   }
   saveChatForAdmin(obj: any){
     return this.apiService.post(`${this.pageUrl}saveChatForAdmin/`, obj);

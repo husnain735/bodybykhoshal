@@ -111,7 +111,7 @@ export class ChatBoxComponent implements OnInit {
     }
   }
   saveChat() {
-    if (this.chat != undefined && this.chat != '') {
+    if (this.chat != undefined && this.chat != '' && this.chat != '\n') {
       var obj = {
         Content: this.chat,
       };
@@ -171,7 +171,7 @@ export class ChatBoxComponent implements OnInit {
             }
           }
           this.chats = response.body;
-          return interval(2000);
+          return interval(20000000);
         })
       )
       .subscribe(() => {
@@ -188,17 +188,19 @@ export class ChatBoxComponent implements OnInit {
       });
   }
   saveChatForAdmin() {
-    var obj = {
-      SenderTwo: this.SenderTwo,
-      Content: this.chat,
-    };
-    this.adminService.saveChatForAdmin(obj).subscribe({
-      next: (res: any) => {
-        this.chat = '';
-        this.scrollToBottom();
-      },
-      error: (error: any) => {},
-    });
+     if (this.chat != undefined && this.chat != '' && this.chat != '\n') {
+      var obj = {
+        SenderTwo: this.SenderTwo,
+        Content: this.chat,
+      };
+      this.adminService.saveChatForAdmin(obj).subscribe({
+        next: (res: any) => {
+          this.chat = '';
+          this.scrollToBottom();
+        },
+        error: (error: any) => {},
+      });
+    }
   }
   closeChat() {
     if (this.chatSubscription) {
