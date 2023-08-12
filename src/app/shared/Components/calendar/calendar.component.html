@@ -44,12 +44,7 @@
         </div>
       </div>
     </h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
       <span aria-hidden="true"><i class="material-icons">close</i></span>
     </button>
   </div>
@@ -61,33 +56,19 @@
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
           <label>Title<span class="text-danger">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Title"
-            formControlName="title"
-            required
-          />
-          <small
-            class="form-text text-danger"
-            *ngIf="
+          <input type="text" class="form-control" placeholder="Title" formControlName="title" required />
+          <small class="form-text text-danger" *ngIf="
               !calendarForm.get('title')?.valid &&
               calendarForm.get('title')?.touched
-            "
-          >
-            Title is required</small
-          >
+            ">
+            Title is required</small>
         </div>
       </div>
 
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
           <label>Category <span class="text-danger">*</span></label>
-          <select
-            class="form-select form-control"
-            formControlName="category"
-            required
-          >
+          <select class="form-select form-control" formControlName="category" required>
             <option value="" selected disabled>Please select</option>
             <option id="work" value="work">Work</option>
             <option id="personal" value="personal">Personal</option>
@@ -100,96 +81,40 @@
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>Start Date<span class="text-danger">*</span></label>
-          <input
-            type="datetime"
-            class="form-control"
-            placeholder="Start Date"
-            formControlName="startDate"
-            required
-          />
-          <small
-            class="form-text text-danger"
-            *ngIf="
+          <app-date-time-picker formControlName="startDate" name="startDate"></app-date-time-picker>
+          <small class="form-text text-danger" *ngIf="
               !calendarForm.get('startDate')?.valid &&
               calendarForm.get('startDate')?.touched
-            "
-          >
-            Start Date is required</small
-          >
+            ">
+            Start Date is required</small>
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>End Date<span class="text-danger">*</span></label>
-          <!-- <input
-            type="datetime"
-            class="form-control"
-            placeholder="Start Date"
-            formControlName="endDate"
-            required
-          /> -->
-          <mat-form-field>
-            <input matInput [ngxMatDatetimePicker]="picker" 
-                            placeholder="Choose a date" 
-                            [formControl]="endDate"
-                            [min]="minDate" [max]="maxDate" 
-                            [disabled]="disabled">
-            <mat-datepicker-toggle matSuffix [for]="picker">
-            </mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #picker 
-              [showSpinners]="showSpinners" 
-              [showSeconds]="showSeconds"
-              [stepHour]="stepHour" [stepMinute]="stepMinute" 
-              [stepSecond]="stepSecond"
-              [touchUi]="touchUi"
-              [color]="color">
-            </ngx-mat-datetime-picker>
-          </mat-form-field>
-          <small
-            class="form-text text-danger"
-            *ngIf="
+          <app-date-time-picker formControlName="endDate" name="endDate"></app-date-time-picker>
+          <small class="form-text text-danger" *ngIf="
               !calendarForm.get('endDate')?.valid &&
               calendarForm.get('endDate')?.touched
-            "
-          >
-            End Date is required</small
-          >
+            ">
+            End Date is required</small>
         </div>
       </div>
 
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
           <label>Details<span class="text-danger">*</span></label>
-          <textarea
-            type="textarea"
-            class="form-control"
-            placeholder="Details"
-            formControlName="details"
-          ></textarea>
+          <textarea type="textarea" class="form-control" placeholder="Details" formControlName="details"></textarea>
         </div>
       </div>
       <div class="modal-footer">
-        <button
-          *ngIf="!isEditClick"
-          type="button"
-          class="btn btn-primary"
-          (click)="saveEvent(calendarForm)"
-          [disabled]="!calendarForm.valid"
-        >
+        <button *ngIf="!isEditClick" type="button" class="btn btn-primary" (click)="saveEvent(calendarForm)"
+          [disabled]="!calendarForm.valid">
           Add Event
         </button>
-        <button
-          *ngIf="isEditClick"
-          type="button"
-          class="btn btn-primary"
-          (click)="eventClick(calendarForm)"
-          [disabled]="!calendarForm.valid"
-        >
+        <button *ngIf="isEditClick" type="button" class="btn btn-primary" (click)="eventClick(calendarForm)"
+          [disabled]="!calendarForm.valid">
           Save Event
         </button>
-        <button
-          type="button"
-          class="btn btn-light"
-          (click)="modal.close('Close click')"
-        >
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
           Close
         </button>
       </div>

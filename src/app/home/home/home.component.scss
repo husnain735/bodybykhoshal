@@ -5,18 +5,25 @@
   height: 560px;
   width: 100%;
 }
+
 .rheader {
-  float: right;
-  margin-top: 50px;
-  width: 430px;
-  height: 90px;
+  // float: right;
+  // margin-top: 25px;
+  // width: 430px;
+  // height: 90px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  object-fit: cover;
 }
+
 .carousel-img-size {
   width: 100%;
 }
+
 .backgroundGradiant {
   background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%);
-  height: calc(100vh - 815px);
+  height: calc(100vh - 551px);
 }
 
 @media (max-width: 767px) {
@@ -24,6 +31,7 @@
     height: 0px;
   }
 }
+
 @media (max-width: 991px) {
   .backgroundGradiant {
     height: calc(100vh - 679px);

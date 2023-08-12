@@ -23,6 +23,9 @@ import { ChatBoxComponent } from './Components/chat-box/chat-box.component';
 import { MaterialModule } from 'src/material/material.module';
 import { CalendarComponent } from './Components/calendar/calendar.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { DateTimePickerComponent } from './Components/date-time-picker/date-time-picker.component';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 
 const icons = {
   Facebook,
@@ -41,7 +44,8 @@ const icons = {
   declarations: [
     HeaderComponent,
     ChatBoxComponent,
-    CalendarComponent
+    CalendarComponent,
+    DateTimePickerComponent,
   ],
   imports: [
     CommonModule,
@@ -55,6 +59,7 @@ const icons = {
     NgbModule,
     MaterialModule,
     FullCalendarModule,
+    FontAwesomeModule
   ],
   exports: [
     FormsModule,
@@ -67,7 +72,13 @@ const icons = {
     ChatBoxComponent,
     MaterialModule,
     FullCalendarModule,
-    CalendarComponent
+    CalendarComponent,
+    DateTimePickerComponent,
+    FontAwesomeModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+  constructor(library: FaIconLibrary) {
+    library.addIcons(faCalendar, faClock);
+  }
+}
