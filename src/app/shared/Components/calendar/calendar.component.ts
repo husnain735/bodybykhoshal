@@ -134,7 +134,6 @@ export class CalendarComponent implements OnInit {
       this.calendarForm.setValue({
         id: row.event.id,
         title: row.event.title,
-        category: row.event.groupId,
         startDate: formatDate(row.event.start, 'yyyy-MM-dd', 'en') || '',
         endDate: formatDate(row.event.end, 'yyyy-MM-dd', 'en') || '',
         details: row.event.extendedProps.details,
@@ -152,25 +151,40 @@ export class CalendarComponent implements OnInit {
 
   saveEvent(form: UntypedFormGroup) {
     this.calendarData = form.value;
-    this.calendarEvents = this.calendarEvents.concat({
-      id: this.randomIDGenerate(5, 'abcdefghijklmnopqrstuvwxyz'),
-      title: this.calendarData.title,
-      start: this.calendarData.startDate,
-      end: this.calendarData.endDate,
-      className: this.getClassNameValue(this.calendarData.category),
-      groupId: this.calendarData.category,
-      details: this.calendarData.details,
-    });
-    this.calendarOptions.events = this.calendarEvents;
-    this.calendarForm.reset();
-    this.modalService.dismissAll();
 
-    this.showNotification(
-      'success',
-      'Save Event Successfully...!!!',
-      'top',
-      'right'
-    );
+    var obj = {
+      Title: this.calendarData.title,
+      Start: this.calendarData.startDate,
+      End: this.calendarData.endDate,
+      Details: this.calendarData.details
+    }
+    this.homeService.saveCustomerBooking(obj).subscribe({
+      next: (res: any) => {
+        debugger
+        this.calendarEvents = this.calendarEvents.concat({
+          id: res.body,
+          title: this.calendarData.title,
+          start: this.calendarData.startDate,
+          end: this.calendarData.endDate,
+          className: 'fc-event-info',
+          details: this.calendarData.details,
+        });
+        this.calendarOptions.events = this.calendarEvents;
+        this.calendarForm.reset();
+        this.modalService.dismissAll();
+
+        this.showNotification(
+          'success',
+          'Save Event Successfully...!!!',
+          'top',
+          'right'
+        );
+      }, error: (error: any) => {
+
+      }
+    })
+
+
   }
 
   eventClick(form: UntypedFormGroup) {
@@ -184,38 +198,41 @@ export class CalendarComponent implements OnInit {
   }
 
   saveEditEvent(eventIndex: number, calendarData: any) {
-    const calendarEvents = this.calendarEvents.slice();
-    const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
-    singleEvent.id = calendarData.id;
-    singleEvent.title = calendarData.title;
-    singleEvent.start = calendarData.startDate;
-    singleEvent.end = calendarData.endDate;
-    singleEvent.className = this.getClassNameValue(calendarData.category);
-    singleEvent.groupId = calendarData.category;
-    singleEvent['details'] = calendarData.details;
-    calendarEvents[eventIndex] = singleEvent;
-    this.calendarEvents = calendarEvents; // reassign the array
-
-    this.calendarOptions.events = calendarEvents;
-
-    this.calendarForm.reset();
-    this.modalService.dismissAll();
-
-    this.showNotification(
-      'success',
-      'Edit Event Successfully...!!!',
-      'top',
-      'right'
-    );
-  }
-
-  changeCategory(event: any, filter: any) {
-    if (event.target.checked) {
-      this.filterItems.push(filter.name);
-    } else {
-      this.filterItems.splice(this.filterItems.indexOf(filter.name), 1);
+    var obj = {
+      Title: calendarData.title,
+      Start: calendarData.startDate,
+      End:calendarData.endDate,
+      Details: calendarData.details
     }
-    this.filterEvent(this.filterItems);
+    this.homeService.saveCustomerBooking(obj).subscribe({
+      next: (res: any) => {
+        const calendarEvents = this.calendarEvents.slice();
+        const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
+        singleEvent.id = res.body;
+        singleEvent.title = calendarData.title;
+        singleEvent.start = calendarData.startDate;
+        singleEvent.end = calendarData.endDate;
+        singleEvent.className = 'fc-event-info';
+        singleEvent['details'] = calendarData.details;
+        calendarEvents[eventIndex] = singleEvent;
+        this.calendarEvents = calendarEvents;
+
+        this.calendarOptions.events = calendarEvents;
+
+        this.calendarForm.reset();
+        this.modalService.dismissAll();
+
+        this.showNotification(
+          'success',
+          'Edit Event Successfully...!!!',
+          'top',
+          'right'
+        );
+      }, error: (error: any) => {
+
+      }
+    })
+
   }
 
   filterEvent(element: any) {
@@ -237,30 +254,12 @@ export class CalendarComponent implements OnInit {
     return this.fb.group({
       id: [calendar.id],
       title: [calendar.title, [Validators.required]],
-      category: [calendar.category],
       startDate: [calendar.startDate, [Validators.required]],
       endDate: [calendar.endDate, [Validators.required]],
       details: [calendar.details],
     });
   }
 
-  getClassNameValue(category: string) {
-    let className = '';
-
-    if (category === 'work') {
-      className = 'fc-event-success';
-    } else if (category === 'personal') {
-      className = 'fc-event-warning';
-    } else if (category === 'important') {
-      className = 'fc-event-primary';
-    } else if (category === 'travel') {
-      className = 'fc-event-danger';
-    } else if (category === 'friends') {
-      className = 'fc-event-info';
-    }
-
-    return className;
-  }
   public randomIDGenerate(length: number, chars: string) {
     let result = '';
     for (let i = length; i > 0; --i) {
@@ -287,10 +286,10 @@ export class CalendarComponent implements OnInit {
           x.statusId == 1
             ? 'fc-event-info'
             : x.statusId == 2
-            ? 'fc-event-success'
-            : x.statusId == 3
-            ? 'fc-event-danger'
-            : '';
+              ? 'fc-event-success'
+              : x.statusId == 3
+                ? 'fc-event-danger'
+                : '';
         x.groupId = 'travel';
         x.allDay = false;
       });
@@ -301,4 +300,5 @@ export class CalendarComponent implements OnInit {
       this.calendarForm.reset();
     }
   }
+
 }

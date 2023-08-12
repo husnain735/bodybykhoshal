@@ -37,4 +37,7 @@ export class HomeService {
   getCustomerBookings(){
     return this.apiService.get(`${this.pageUrl}getCustomerBookings`);
   }
+  saveCustomerBooking(obj: any){
+    return this.apiService.post(`${this.pageUrl}saveCustomerBooking/`, obj);
+  }
 }
