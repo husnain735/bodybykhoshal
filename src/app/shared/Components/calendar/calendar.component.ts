@@ -134,19 +134,26 @@ export class CalendarComponent implements OnInit {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
-
+    debugger
     if (type === 'editEvent') {
       this.dialogTitle = row.event.title;
       this.isEditClick = true;
       this.calendarForm.setValue({
         id: row.event.id,
         title: row.event.title,
-        startDate: row.event.start,
-        endDate: row.event.end,
+        startDate: formatDate(row.event.start, 'yyyy-MM-dd', 'en') || '',
+        endDate: formatDate(row.event.end, 'yyyy-MM-dd', 'en') || '',
         details: row.event.extendedProps.details,
       });
     } else {
-      this.calendarForm.reset();
+      this.calendarForm.setValue({
+        id: 0,
+        title: '',
+        startDate: formatDate(row.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
+        endDate: formatDate(row.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
+        details: ''
+      });
+      // this.calendarForm.reset();
       this.isEditClick = false;
     }
 
@@ -199,13 +206,13 @@ export class CalendarComponent implements OnInit {
 
     this.calendarEvents.forEach((element, index) => {
       if (+this.calendarData.id === +element.id) {
-        this.saveEditEvent(index, this.calendarData);
+        this.Editbooking(index, this.calendarData);
       }
     }, this);
   }
 
-  saveEditEvent(eventIndex: number, calendarData: any) {
-
+  Editbooking(eventIndex: number, calendarData: any) {
+    debugger
     var obj = {
       Id: calendarData.id,
       Title: calendarData.title,
@@ -219,8 +226,8 @@ export class CalendarComponent implements OnInit {
         const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
         singleEvent.id = res.body.id;
         singleEvent.title = res.body.title;
-        singleEvent.start = calendarData.startDate;
-        singleEvent.end = calendarData.endDate;
+        singleEvent.start = formatDate(calendarData.startDate, 'yyyy-MM-dd HH:mm:ss', 'en');
+        singleEvent.end = formatDate(calendarData.endDate, 'yyyy-MM-dd HH:mm:ss', 'en') ;
         singleEvent.className = 'fc-event-info';
         singleEvent['details'] = calendarData.details;
         calendarEvents[eventIndex] = singleEvent;
@@ -306,5 +313,4 @@ export class CalendarComponent implements OnInit {
       this.calendarForm.reset();
     }
   }
-
 }

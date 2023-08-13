@@ -132,7 +132,8 @@ export class ChatBoxComponent implements OnInit {
         this.GetChatWithAdmin();
       }
       this.scrollToBottom();
-    } else {
+    } 
+    else {
       if (this.chatSubscription) {
         this.chatSubscription.unsubscribe();
       }
@@ -171,7 +172,7 @@ export class ChatBoxComponent implements OnInit {
             }
           }
           this.chats = response.body;
-          return interval(20000000);
+          return interval(2000);
         })
       )
       .subscribe(() => {

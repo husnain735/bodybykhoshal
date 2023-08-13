@@ -24,13 +24,18 @@
   </nav>
   <div>
     <div class="row mx-0">
-      <div class="col-9"></div>
+      <div class="col-9">
+        <div>
+          <app-calendar></app-calendar>
+        </div>
+      </div>
       <div class="col-3 user-profile-container">
         <div class="pt-2">
           <div *ngFor="let user of userProfiles">
             <div
               class="p-2 cursor-pointer card-hover"
-              (click)="readAllMessages(user)">
+              (click)="readAllMessages(user)"
+            >
               <div class="">
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="d-flex gap-3 align-items-center">
@@ -42,9 +47,8 @@
                     </div>
                   </div>
                   <div *ngIf="user.isNotify" class="notification-badge">
-                    {{user.totalNotification}}
+                    {{ user.totalNotification }}
                   </div>
-                  
                 </div>
               </div>
             </div>
