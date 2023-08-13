@@ -85,7 +85,9 @@ export class CalendarComponent implements OnInit {
   @ViewChild('eventWindow')
   eventWindow?: TemplateRef<any>;
   calCheck: any;
-
+  @Input() customerCalendar;
+  calendarOptions: CalendarOptions;
+  datetimeRangError: boolean;
   constructor(
     private fb: UntypedFormBuilder,
     public calendarService: CalendarService,
@@ -97,44 +99,46 @@ export class CalendarComponent implements OnInit {
     this.calendar = new Calendar(blankObject);
     this.calendarForm = this.createCalendarForm(this.calendar);
   }
-
   ngOnInit() {
-    //this.calendarEvents = INITIAL_EVENTS;
-    //this.tempEvents = this.calendarEvents;
-    // this.calendarOptions.initialEvents = this.calendarEvents;
-    // this.tempEvents = this.calendarEvents;
-    // this.calendarOptions.initialEvents = this.calendarEvents;
+    this.calendarOptions = {
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'timeGridWeek',
+      },
+      initialView: 'timeGridWeek',
+      weekends: true,
+      editable: false,
+      selectable: this.customerCalendar ? true : false,
+      // selectAllow: (selectInfo: any) => {
+      //   const selectedStartDate = selectInfo.start;
+      //   const selectedEndDate = selectInfo.end;
+      //   const timeDiff = selectedEndDate - selectedStartDate;
+      //   const minDuration = 2 * 60 * 60 * 1000;
+      //   const maxDuration = 2 * 60 * 60 * 1000;
+      //   return timeDiff >= minDuration && timeDiff <= maxDuration;
+      // },
+      selectMirror: true,
+      dayMaxEvents: true,
+      select: this.handleDateSelect.bind(this),
+      eventClick: this.handleEventClick.bind(this),
+      eventsSet: this.handleEvents.bind(this),
+      firstDay: new Date().getDay(),
+      dateIncrement: { days: 1 },
+      validRange: {
+        start: new Date(),
+        end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000)
+      },
+      slotMinTime: '07:00',
+      slotMaxTime: '19:00'
+    };
   }
-
-  calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'timeGridWeek',
-    },
-    initialView: 'timeGridWeek',
-    weekends: true,
-    editable: false,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-    select: this.handleDateSelect.bind(this),
-    eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-    firstDay: new Date().getDay(), // Start week from the current day
-    dateIncrement: { days: 1 }, // Increment by 1 day
-    validRange: {
-      start: new Date(), // Start from the current date
-      end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000) // End after 6 days
-    }
-  };
-
   handleDateSelect(selectInfo: DateSelectArg) {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
-    debugger
+    this.datetimeRangError = false;
     if (type === 'editEvent') {
       this.dialogTitle = row.event.title;
       this.isEditClick = true;
@@ -153,116 +157,108 @@ export class CalendarComponent implements OnInit {
         endDate: formatDate(row.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
         details: ''
       });
-      // this.calendarForm.reset();
       this.isEditClick = false;
     }
-
-    this.modalService.open(this.eventWindow, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-    });
+    if (this.customerCalendar) {
+      this.modalService.open(this.eventWindow, {
+        ariaLabelledBy: 'modal-basic-title',
+        size: 'lg',
+      });
+    }
   }
-
   saveEvent(form: UntypedFormGroup) {
     this.calendarData = form.value;
-
-    var obj = {
-      Title: this.calendarData.title,
-      Start: this.calendarData.startDate,
-      End: this.calendarData.endDate,
-      Details: this.calendarData.details
-    }
-    this.homeService.saveCustomerBooking(obj).subscribe({
-      next: (res: any) => {
-        if (res.body.id > 0) {
-          this.calendarEvents = this.calendarEvents.concat({
-            id: res.body.id,
-            title: res.body.title,
-            start: this.calendarData.startDate,
-            end: this.calendarData.endDate,
-            className: 'fc-event-info',
-            details: this.calendarData.details,
-          });
-          this.calendarOptions.events = this.calendarEvents;
-          this.calendarForm.reset();
-          this.modalService.dismissAll();
-
-          this.showNotification(
-            'success',
-            'Save Event Successfully...!!!',
-            'top',
-            'right'
-          );
-        }
-      }, error: (error: any) => {
-
+    if (this.validateDateRange(this.calendarData.startDate, this.calendarData.endDate)) {
+      var obj = {
+        Title: this.calendarData.title,
+        Start: this.calendarData.startDate,
+        End: this.calendarData.endDate,
+        Details: this.calendarData.details
       }
-    })
+      this.homeService.saveCustomerBooking(obj).subscribe({
+        next: (res: any) => {
+          if (res.body.id > 0) {
+            this.calendarEvents = this.calendarEvents.concat({
+              id: res.body.id,
+              title: res.body.title,
+              start: this.calendarData.startDate,
+              end: this.calendarData.endDate,
+              className: 'fc-event-info',
+              details: this.calendarData.details,
+            });
+            this.calendarOptions.events = this.calendarEvents;
+            this.calendarForm.reset();
+            this.modalService.dismissAll();
+
+            this.showNotification(
+              'success',
+              'Save Event Successfully...!!!',
+              'top',
+              'right'
+            );
+          }
+        }, error: (error: any) => {
+
+        }
+      })
+    }
   }
-
   eventClick(form: UntypedFormGroup) {
-
     this.calendarData = form.value;
-
     this.calendarEvents.forEach((element, index) => {
       if (+this.calendarData.id === +element.id) {
         this.Editbooking(index, this.calendarData);
       }
     }, this);
   }
-
   Editbooking(eventIndex: number, calendarData: any) {
-    debugger
-    var obj = {
-      Id: calendarData.id,
-      Title: calendarData.title,
-      Start: calendarData.startDate,
-      End: calendarData.endDate,
-      Details: calendarData.details
-    }
-    this.homeService.saveCustomerBooking(obj).subscribe({
-      next: (res: any) => {
-        const calendarEvents = this.calendarEvents.slice();
-        const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
-        singleEvent.id = res.body.id;
-        singleEvent.title = res.body.title;
-        singleEvent.start = formatDate(calendarData.startDate, 'yyyy-MM-dd HH:mm:ss', 'en');
-        singleEvent.end = formatDate(calendarData.endDate, 'yyyy-MM-dd HH:mm:ss', 'en') ;
-        singleEvent.className = 'fc-event-info';
-        singleEvent['details'] = calendarData.details;
-        calendarEvents[eventIndex] = singleEvent;
-        this.calendarEvents = calendarEvents;
-        this.calendarOptions.events = calendarEvents;
-        this.calendarForm.reset();
-        this.modalService.dismissAll();
-        this.showNotification(
-          'success',
-          'Edit Event Successfully...!!!',
-          'top',
-          'right'
-        );
-      }, error: (error: any) => {
-
+    if (this.validateDateRange(this.calendarData.startDate, this.calendarData.endDate)) {
+      var obj = {
+        Id: calendarData.id,
+        Title: calendarData.title,
+        Start: calendarData.startDate,
+        End: calendarData.endDate,
+        Details: calendarData.details
       }
-    })
+      this.homeService.saveCustomerBooking(obj).subscribe({
+        next: (res: any) => {
+          const calendarEvents = this.calendarEvents.slice();
+          const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
+          singleEvent.id = res.body.id;
+          singleEvent.title = res.body.title;
+          singleEvent.start = formatDate(calendarData.startDate, 'yyyy-MM-dd HH:mm:ss', 'en');
+          singleEvent.end = formatDate(calendarData.endDate, 'yyyy-MM-dd HH:mm:ss', 'en');
+          singleEvent.className = 'fc-event-info';
+          singleEvent['details'] = calendarData.details;
+          calendarEvents[eventIndex] = singleEvent;
+          this.calendarEvents = calendarEvents;
+          this.calendarOptions.events = calendarEvents;
+          this.calendarForm.reset();
+          this.modalService.dismissAll();
+          this.showNotification(
+            'success',
+            'Edit Event Successfully...!!!',
+            'top',
+            'right'
+          );
+        }, error: (error: any) => {
 
+        }
+      })
+    }
   }
-
   filterEvent(element: any) {
     const list = this.calendarEvents.filter((x) =>
       element.map((y: any) => y).includes(x.groupId)
     );
     this.calendarOptions.events = list;
   }
-
   handleEventClick(clickInfo: EventClickArg) {
     this.eventWindowCall(clickInfo, 'editEvent');
   }
-
   handleEvents(events: EventApi[]) {
     // this.currentEvents = events;
   }
-
   createCalendarForm(calendar: Calendar): UntypedFormGroup {
     return this.fb.group({
       id: [calendar.id],
@@ -272,8 +268,7 @@ export class CalendarComponent implements OnInit {
       details: [calendar.details],
     });
   }
-
-  public randomIDGenerate(length: number, chars: string) {
+  randomIDGenerate(length: number, chars: string) {
     let result = '';
     for (let i = length; i > 0; --i) {
       result += chars[Math.round(Math.random() * (chars.length - 1))];
@@ -311,6 +306,23 @@ export class CalendarComponent implements OnInit {
       const calendarEvents = this.calendarEvents.slice();
       this.calendarOptions.events = calendarEvents;
       this.calendarForm.reset();
+    }
+  }
+  validateDateRange(startDate, endDate) {
+    if (startDate && endDate) {
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
+
+      const timeDifference = Math.abs(startDateObj.getTime() - endDateObj.getTime());
+      const maxTimeDifference = 2 * 60 * 60 * 1000;
+
+      if (startDateObj < endDateObj && timeDifference == maxTimeDifference) {
+        this.datetimeRangError = false;
+        return true;
+      } else {
+        this.datetimeRangError = true;
+        return false;
+      }
     }
   }
 }

@@ -24,4 +24,7 @@ export class AdminService {
   readAllMessages(obj: any){
     return this.apiService.post(`${this.pageUrl}readAllMessages/`, obj);
   }
+  getCustomersBookings(): Observable<any>{
+    return this.apiService.get(`${this.pageUrl}getCustomersBookings`);
+  }
 }

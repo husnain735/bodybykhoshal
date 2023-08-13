@@ -2,11 +2,13 @@
   height: calc(100vh - 315px);
   overflow-y: auto;
 }
+
 .modal-footer-custom {
   display: flex;
   justify-content: end;
   gap: 4px;
 }
+
 // ::ng-deep {
 //   .fc-view-harness-active {
 //     height: calc(100vh - 350px) !important;
@@ -17,7 +19,14 @@
   .fc-header-toolbar {
     display: none;
   }
+
   .fc-view-harness-active {
     height: calc(100vh - 295px) !important;
+  }
+}
+
+::ng-deep .admin-calendar {
+  .fc-view-harness-active {
+    height: calc(100vh - 115px) !important;
   }
 }

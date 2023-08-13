@@ -1,7 +1,8 @@
 <div class="row mx-0 my-2">
   <div class="col-md-12 col-sm-12">
     <div class="panel-body">
-      <full-calendar [options]="calendarOptions" class="customer-calendar"> </full-calendar>
+      <full-calendar [options]="calendarOptions" [ngClass]="customerCalendar ? 'customer-calendar' : 'admin-calendar'">
+      </full-calendar>
     </div>
   </div>
 </div>
@@ -57,6 +58,13 @@
             ">
             End Date is required</small>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+          <small class="form-text text-danger" *ngIf="datetimeRangError">
+            Your booking range should be 2 hours</small>
+        </div>
+
       </div>
 
       <div class="row">

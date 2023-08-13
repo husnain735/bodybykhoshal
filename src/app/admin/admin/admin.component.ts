@@ -16,6 +16,8 @@ export class AdminComponent implements OnInit {
   selectedUserGuid: string;
   UserNameInChat: string;
   private customerSubscription: Subscription;
+  customerCalendarEvent = false;
+  calendarEventsInput: any[] = [];
 
   constructor(
     private adminService: AdminService,
@@ -24,7 +26,8 @@ export class AdminComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.GetAllCustomers();
+    this.getCustomersBookings();
+
   }
 
   GetAllCustomers() {
@@ -85,5 +88,14 @@ export class AdminComponent implements OnInit {
     if (this.customerSubscription) {
       this.customerSubscription.unsubscribe();
     }
+  }
+  getCustomersBookings() {
+    this.adminService.getCustomersBookings().subscribe({
+      next: (res: any) => {
+        this.calendarEventsInput = res.body;
+        this.GetAllCustomers();
+      },
+      error: (error: any) => {},
+    });
   }
 }

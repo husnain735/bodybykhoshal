@@ -1,12 +1,4 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { Component, NgZone, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { HomeService } from 'src/app/shared/services/home.service';
 
@@ -28,6 +20,7 @@ export class CustomerDashboardComponent implements OnInit {
   private notificationSubscription: Subscription;
   notification: any;
   calendarEventsInput: any[] = [];
+  customerCalendarEvent = true;
 
   constructor(private homeService: HomeService, private ngZone: NgZone) {}
 
