@@ -33,6 +33,7 @@ import { HomeService } from '../../services/home.service';
 // import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-calendar',
@@ -84,97 +85,145 @@ export class CalendarComponent implements OnInit {
 
   @ViewChild('eventWindow')
   eventWindow?: TemplateRef<any>;
+  @ViewChild('eventWindow2')
+  eventWindow2?: TemplateRef<any>;
   calCheck: any;
   @Input() customerCalendar;
   calendarOptions: CalendarOptions;
   datetimeRangError: boolean;
+  statusId: number;
+  bookingStatus = [
+    { id: 2, value: 'Approve' },
+    { id: 3, value: 'Reject' },
+  ];
+  bookinStatusForm: UntypedFormGroup;
   constructor(
     private fb: UntypedFormBuilder,
     public calendarService: CalendarService,
     private modalService: NgbModal,
-    private homeService: HomeService // private toastr: ToastrService
+    private homeService: HomeService,
+    private adminService: AdminService // private toastr: ToastrService
   ) {
     this.dialogTitle = 'Add New Event';
     const blankObject = {} as Calendar;
     this.calendar = new Calendar(blankObject);
     this.calendarForm = this.createCalendarForm(this.calendar);
+    this.bookinStatusForm = this.fb.group({
+      Id: [0],
+      Status: ['', [Validators.required]],
+    });
   }
   ngOnInit() {
-    this.calendarOptions = {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'timeGridWeek',
-      },
-      initialView: 'timeGridWeek',
-      weekends: true,
-      editable: false,
-      selectable: this.customerCalendar ? true : false,
-      // selectAllow: (selectInfo: any) => {
-      //   const selectedStartDate = selectInfo.start;
-      //   const selectedEndDate = selectInfo.end;
-      //   const timeDiff = selectedEndDate - selectedStartDate;
-      //   const minDuration = 2 * 60 * 60 * 1000;
-      //   const maxDuration = 2 * 60 * 60 * 1000;
-      //   return timeDiff >= minDuration && timeDiff <= maxDuration;
-      // },
-      selectMirror: true,
-      dayMaxEvents: true,
-      select: this.handleDateSelect.bind(this),
-      eventClick: this.handleEventClick.bind(this),
-      eventsSet: this.handleEvents.bind(this),
-      firstDay: new Date().getDay(),
-      dateIncrement: { days: 1 },
-      validRange: {
-        start: new Date(),
-        end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000)
-      },
-      slotMinTime: '07:00',
-      slotMaxTime: '19:00'
-    };
+    if (this.customerCalendar) {
+      this.calendarOptions = {
+        plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'timeGridWeek',
+        },
+        initialView: 'timeGridWeek',
+        weekends: true,
+        editable: false,
+        selectable: true,
+        selectMirror: true,
+        dayMaxEvents: true,
+        select: this.handleDateSelect.bind(this),
+        eventClick: this.handleEventClick.bind(this),
+        eventsSet: this.handleEvents.bind(this),
+        firstDay: new Date().getDay(),
+        dateIncrement: { days: 1 },
+        validRange: {
+          start: new Date(),
+          end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),
+        },
+        slotMinTime: '07:00',
+        slotMaxTime: '19:00',
+      };
+    } else if (!this.customerCalendar) {
+      this.calendarOptions = {
+        plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+        },
+        initialView: 'dayGridMonth',
+        weekends: true,
+        editable: false,
+        selectable: false,
+        selectMirror: true,
+        dayMaxEvents: true,
+        select: this.handleDateSelect.bind(this),
+        eventClick: this.handleEventClick.bind(this),
+        eventsSet: this.handleEvents.bind(this),
+        slotMinTime: '07:00',
+        slotMaxTime: '19:00',
+      };
+    }
   }
   handleDateSelect(selectInfo: DateSelectArg) {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
+    var statusId;
     this.datetimeRangError = false;
     if (type === 'editEvent') {
-      this.dialogTitle = row.event.title;
-      this.isEditClick = true;
-      this.calendarForm.setValue({
-        id: row.event.id,
-        title: row.event.title,
-        startDate: formatDate(row.event.start, 'yyyy-MM-dd', 'en') || '',
-        endDate: formatDate(row.event.end, 'yyyy-MM-dd', 'en') || '',
-        details: row.event.extendedProps.details,
-      });
+      statusId = +row.event.groupId;
+      if (this.customerCalendar) {
+        this.dialogTitle = row.event.title;
+        this.isEditClick = true;
+        this.calendarForm.setValue({
+          id: row.event.id,
+          title: row.event.title,
+          startDate: formatDate(row.event.start, 'yyyy-MM-dd', 'en') || '',
+          endDate: formatDate(row.event.end, 'yyyy-MM-dd', 'en') || '',
+          details: row.event.extendedProps.details,
+        });
+      } else if (!this.customerCalendar) {
+        this.bookinStatusForm.setValue({
+          Id: +row.event.id,
+          Status: ['', [Validators.required]],
+        });
+      }
     } else {
+      statusId = 1;
       this.calendarForm.setValue({
         id: 0,
         title: '',
         startDate: formatDate(row.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
         endDate: formatDate(row.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
-        details: ''
+        details: '',
       });
       this.isEditClick = false;
     }
-    if (this.customerCalendar) {
+    if (this.customerCalendar && statusId == 1) {
       this.modalService.open(this.eventWindow, {
         ariaLabelledBy: 'modal-basic-title',
         size: 'lg',
       });
     }
+    if (!this.customerCalendar) {
+      this.modalService.open(this.eventWindow2, {
+        ariaLabelledBy: 'modal-basic-title',
+        size: 'md',
+      });
+    }
   }
   saveEvent(form: UntypedFormGroup) {
     this.calendarData = form.value;
-    if (this.validateDateRange(this.calendarData.startDate, this.calendarData.endDate)) {
+    if (
+      this.validateDateRange(
+        this.calendarData.startDate,
+        this.calendarData.endDate
+      )
+    ) {
       var obj = {
         Title: this.calendarData.title,
         Start: this.calendarData.startDate,
         End: this.calendarData.endDate,
-        Details: this.calendarData.details
-      }
+        Details: this.calendarData.details,
+      };
       this.homeService.saveCustomerBooking(obj).subscribe({
         next: (res: any) => {
           if (res.body.id > 0) {
@@ -185,6 +234,7 @@ export class CalendarComponent implements OnInit {
               end: this.calendarData.endDate,
               className: 'fc-event-info',
               details: this.calendarData.details,
+              groupId: '1',
             });
             this.calendarOptions.events = this.calendarEvents;
             this.calendarForm.reset();
@@ -197,10 +247,9 @@ export class CalendarComponent implements OnInit {
               'right'
             );
           }
-        }, error: (error: any) => {
-
-        }
-      })
+        },
+        error: (error: any) => {},
+      });
     }
   }
   eventClick(form: UntypedFormGroup) {
@@ -212,22 +261,35 @@ export class CalendarComponent implements OnInit {
     }, this);
   }
   Editbooking(eventIndex: number, calendarData: any) {
-    if (this.validateDateRange(this.calendarData.startDate, this.calendarData.endDate)) {
+    if (
+      this.validateDateRange(
+        this.calendarData.startDate,
+        this.calendarData.endDate
+      )
+    ) {
       var obj = {
         Id: calendarData.id,
         Title: calendarData.title,
         Start: calendarData.startDate,
         End: calendarData.endDate,
-        Details: calendarData.details
-      }
+        Details: calendarData.details,
+      };
       this.homeService.saveCustomerBooking(obj).subscribe({
         next: (res: any) => {
           const calendarEvents = this.calendarEvents.slice();
           const singleEvent = Object.assign({}, calendarEvents[eventIndex]);
           singleEvent.id = res.body.id;
           singleEvent.title = res.body.title;
-          singleEvent.start = formatDate(calendarData.startDate, 'yyyy-MM-dd HH:mm:ss', 'en');
-          singleEvent.end = formatDate(calendarData.endDate, 'yyyy-MM-dd HH:mm:ss', 'en');
+          singleEvent.start = formatDate(
+            calendarData.startDate,
+            'yyyy-MM-dd HH:mm:ss',
+            'en'
+          );
+          singleEvent.end = formatDate(
+            calendarData.endDate,
+            'yyyy-MM-dd HH:mm:ss',
+            'en'
+          );
           singleEvent.className = 'fc-event-info';
           singleEvent['details'] = calendarData.details;
           calendarEvents[eventIndex] = singleEvent;
@@ -241,10 +303,9 @@ export class CalendarComponent implements OnInit {
             'top',
             'right'
           );
-        }, error: (error: any) => {
-
-        }
-      })
+        },
+        error: (error: any) => {},
+      });
     }
   }
   filterEvent(element: any) {
@@ -294,11 +355,11 @@ export class CalendarComponent implements OnInit {
           x.statusId == 1
             ? 'fc-event-info'
             : x.statusId == 2
-              ? 'fc-event-success'
-              : x.statusId == 3
-                ? 'fc-event-danger'
-                : '';
-        x.groupId = 'travel';
+            ? 'fc-event-success'
+            : x.statusId == 3
+            ? 'fc-event-danger'
+            : '';
+        x.groupId = x.statusId.toString();
         x.allDay = false;
       });
       this.tempEvents = this.calendarEvents;
@@ -313,7 +374,9 @@ export class CalendarComponent implements OnInit {
       const startDateObj = new Date(startDate);
       const endDateObj = new Date(endDate);
 
-      const timeDifference = Math.abs(startDateObj.getTime() - endDateObj.getTime());
+      const timeDifference = Math.abs(
+        startDateObj.getTime() - endDateObj.getTime()
+      );
       const maxTimeDifference = 2 * 60 * 60 * 1000;
 
       if (startDateObj < endDateObj && timeDifference == maxTimeDifference) {
@@ -324,5 +387,37 @@ export class CalendarComponent implements OnInit {
         return false;
       }
     }
+  }
+  approveAndRejectBooking() {
+    var obj = {
+      BookinId: this.bookinStatusForm.value.Id,
+      StatusId: +this.bookinStatusForm.value.Status,
+    };
+    this.adminService.approveAndRejectBooking(obj).subscribe({
+      next: (res: any) => {
+        var idx = this.calendarEvents.findIndex(
+          (x) => +x.id == this.bookinStatusForm.value.Id
+        );
+        if (idx > -1) {
+          this.calendarEvents[idx].groupId =
+            this.bookinStatusForm.value.Status.toString();
+          this.calendarEvents[idx].className =
+            this.calendarEvents[idx].groupId == '1'
+              ? 'fc-event-info'
+              : this.calendarEvents[idx].groupId == '2'
+              ? 'fc-event-success'
+              : this.calendarEvents[idx].groupId == '3'
+              ? 'fc-event-danger'
+              : '';
+        }
+        this.tempEvents = this.calendarEvents;
+        this.calendarOptions.initialEvents = this.calendarEvents;
+        const calendarEvents = this.calendarEvents.slice();
+        this.calendarOptions.events = calendarEvents;
+        this.bookinStatusForm.reset();
+        this.modalService.dismissAll();
+      },
+      error: (error: any) => {},
+    });
   }
 }

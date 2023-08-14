@@ -18,7 +18,7 @@ export class AdminComponent implements OnInit {
   private customerSubscription: Subscription;
   customerCalendarEvent = false;
   calendarEventsInput: any[] = [];
-
+  IsBookingTab = true
   constructor(
     private adminService: AdminService,
     public router: Router,
@@ -27,7 +27,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.getCustomersBookings();
-
   }
 
   GetAllCustomers() {

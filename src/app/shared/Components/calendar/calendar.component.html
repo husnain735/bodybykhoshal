@@ -1,7 +1,10 @@
 <div class="row mx-0 my-2">
   <div class="col-md-12 col-sm-12">
     <div class="panel-body">
-      <full-calendar [options]="calendarOptions" [ngClass]="customerCalendar ? 'customer-calendar' : 'admin-calendar'">
+      <full-calendar
+        [options]="calendarOptions"
+        [ngClass]="customerCalendar ? 'customer-calendar' : 'admin-calendar'"
+      >
       </full-calendar>
     </div>
   </div>
@@ -12,13 +15,16 @@
     <h4 class="modal-title" id="modal-basic-title">
       <div class="table-modal-header">
         <div class="modal-about">
-          <div class="fw-bold p-t-10 font-17">
-            Booking
-          </div>
+          <div class="fw-bold p-t-10 font-17">Booking</div>
         </div>
       </div>
     </h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
       <span aria-hidden="true"><i class="material-icons">close</i></span>
     </button>
   </div>
@@ -42,48 +48,129 @@
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>Start Date<span class="text-danger">*</span></label>
-          <app-date-time-picker formControlName="startDate" name="startDate"></app-date-time-picker>
-          <small class="form-text text-danger" *ngIf="
+          <app-date-time-picker
+            formControlName="startDate"
+            name="startDate"
+          ></app-date-time-picker>
+          <small
+            class="form-text text-danger"
+            *ngIf="
               !calendarForm.get('startDate')?.valid &&
               calendarForm.get('startDate')?.touched
-            ">
-            Start Date is required</small>
+            "
+          >
+            Start Date is required</small
+          >
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>End Date<span class="text-danger">*</span></label>
-          <app-date-time-picker formControlName="endDate" name="endDate"></app-date-time-picker>
-          <small class="form-text text-danger" *ngIf="
+          <app-date-time-picker
+            formControlName="endDate"
+            name="endDate"
+          ></app-date-time-picker>
+          <small
+            class="form-text text-danger"
+            *ngIf="
               !calendarForm.get('endDate')?.valid &&
               calendarForm.get('endDate')?.touched
-            ">
-            End Date is required</small>
+            "
+          >
+            End Date is required</small
+          >
         </div>
       </div>
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <small class="form-text text-danger" *ngIf="datetimeRangError">
-            Your booking range should be 2 hours</small>
+            Your booking range should be 2 hours</small
+          >
         </div>
-
       </div>
 
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
           <label>Details<span class="text-danger">*</span></label>
-          <textarea type="textarea" class="form-control" placeholder="Details" formControlName="details"></textarea>
+          <textarea
+            type="textarea"
+            class="form-control"
+            placeholder="Details"
+            formControlName="details"
+          ></textarea>
         </div>
       </div>
       <div class="modal-footer-custom">
-        <button *ngIf="!isEditClick" type="button" class="btn btn-primary" (click)="saveEvent(calendarForm)"
-          [disabled]="!calendarForm.valid">
+        <button
+          *ngIf="!isEditClick"
+          type="button"
+          class="btn btn-primary"
+          (click)="saveEvent(calendarForm)"
+          [disabled]="!calendarForm.valid"
+        >
           Save
         </button>
-        <button *ngIf="isEditClick" type="button" class="btn btn-primary" (click)="eventClick(calendarForm)"
-          [disabled]="!calendarForm.valid">
+        <button
+          *ngIf="isEditClick"
+          type="button"
+          class="btn btn-primary"
+          (click)="eventClick(calendarForm)"
+          [disabled]="!calendarForm.valid"
+        >
           Edit
         </button>
-        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="modal.close('Close click')"
+        >
           Close
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #eventWindow2 let-modal>
+  <div class="modal-header editRowModal">
+    <h4 class="modal-title" id="modal-basic-title">
+      <div class="table-modal-header">
+        <div class="modal-about">
+          <div class="fw-bold p-t-10 font-17">Approve or Rejecy Booking</div>
+        </div>
+      </div>
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="register-form" [formGroup]="bookinStatusForm">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <label>Status<span class="text-danger">*</span></label>
+          <select
+            class="form-select form-control"
+            formControlName="Status"
+            required
+          >
+            <option value="" selected disabled>Please select</option>
+            <option *ngFor="let desig of bookingStatus" [value]="desig.id">
+              {{ desig.value }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer-custom">
+        <button
+          *ngIf="!isEditClick"
+          type="button"
+          class="btn btn-primary"
+          (click)="approveAndRejectBooking()"
+        >
+          Save
         </button>
       </div>
     </form>

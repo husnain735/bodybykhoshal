@@ -27,4 +27,10 @@ export class AdminService {
   getCustomersBookings(): Observable<any>{
     return this.apiService.get(`${this.pageUrl}getCustomersBookings`);
   }
+  approveAndRejectBooking(obj: any){
+    return this.apiService.post(`${this.pageUrl}approveAndRejectBooking/`, obj);
+  }
+  getAllCustomerPackages(): Observable<any>{
+    return this.apiService.get(`${this.pageUrl}getAllCustomerPackages`);
+  }
 }
