@@ -1,6 +1,6 @@
 <div class="bg-white text-black container-height position-relative">
   <div class="row mx-0 pt-lg-3 px-lg-1">
-    <ng-container *ngIf="package != undefined">
+    <ng-container *ngIf="package.packageName != undefined">
       <div class="col-lg-6 col-md-6 col-sm-12 col-12">
         <div class="card-body">
           <div class="pricing" style="margin-bottom: 0 !important;">
@@ -29,18 +29,20 @@
           </div>
         </div>
       </div>
+      <div>
+        <app-calendar [customerCalendar]="customerCalendarEvent" [calendarEvents]="calendarEventsInput"></app-calendar>
+      </div>
     </ng-container>
-    <div>
-      <app-calendar [customerCalendar]="customerCalendarEvent"  [calendarEvents]="calendarEventsInput"></app-calendar>
-    </div>
+    <ng-container *ngIf="package.packageName == undefined">
+      <div class="warning-message-container">
+        <span class="warning-message-title">
+          Please await approval from the admin for the selected package.</span>
+      </div>
+    </ng-container>
     <div class="chat-box-position z-Index-1000">
       <app-chat-box [isFormOpenChild]="isFormOpen"></app-chat-box>
     </div>
-    <button
-      class="chatBtn-position bg-gray"
-      mat-fab
-      (click)="openClose()"
-    >
+    <button class="chatBtn-position bg-gray" mat-fab (click)="openClose()">
       <mat-icon *ngIf="isFormOpen">chat</mat-icon>
       <mat-icon *ngIf="!isFormOpen">chat_bubble</mat-icon>
       <div *ngIf="notification.isNotify" class="notification-badge">

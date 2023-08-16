@@ -26,6 +26,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { DateTimePickerComponent } from './Components/date-time-picker/date-time-picker.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 const icons = {
   Facebook,
@@ -46,6 +47,7 @@ const icons = {
     ChatBoxComponent,
     CalendarComponent,
     DateTimePickerComponent,
+
   ],
   imports: [
     CommonModule,
@@ -59,7 +61,8 @@ const icons = {
     NgbModule,
     MaterialModule,
     FullCalendarModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgxDatatableModule
   ],
   exports: [
     FormsModule,
@@ -74,7 +77,8 @@ const icons = {
     FullCalendarModule,
     CalendarComponent,
     DateTimePickerComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgxDatatableModule
   ]
 })
 export class SharedModule {

@@ -8,9 +8,9 @@ export function timeRangeValidator(): ValidatorFn {
 
     if (startDate && endDate) {
       const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-      const hoursDiff = timeDiff / 3600000;
+      const hoursDiff = timeDiff / 1800000;
 
-      if (hoursDiff < 2 || hoursDiff > 2) {
+      if (hoursDiff < 1 || hoursDiff > 1) {
         return { timeRangeError: true };
       }
     }

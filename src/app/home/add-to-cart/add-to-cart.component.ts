@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HomeService } from 'src/app/shared/services/home.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class AddToCartComponent {
 
 
   constructor(private homeService: HomeService,
-    private activatedRoute: ActivatedRoute) {}
+    private activatedRoute: ActivatedRoute,
+    public router: Router,) {}
 
   ngOnInit() {
     localStorage.removeItem('PackageId');
@@ -26,7 +27,7 @@ export class AddToCartComponent {
         }
       }
     });
-    
+
   }
 
   GetPackage() {
@@ -43,7 +44,7 @@ export class AddToCartComponent {
   AddToCart() {
     this.homeService.AddToCart(this.PackageId).subscribe({
       next:(res:any) => {
-        
+        this.router.navigate(['/home/customer-dashboard']);
       }, error:(error) => {
 
       }

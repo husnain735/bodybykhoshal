@@ -97,6 +97,8 @@ export class CalendarComponent implements OnInit {
     { id: 3, value: 'Reject' },
   ];
   bookinStatusForm: UntypedFormGroup;
+  IsCalendarShow: boolean;
+
   constructor(
     private fb: UntypedFormBuilder,
     public calendarService: CalendarService,
@@ -114,7 +116,28 @@ export class CalendarComponent implements OnInit {
     });
   }
   ngOnInit() {
+
     if (this.customerCalendar) {
+      const currentDate = new Date();
+      const startMorning = new Date(currentDate);
+      startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
+      const endMorning = new Date(currentDate);
+      endMorning.setHours(8, 0, 0); // Set morning end time to 8:00 AM
+      const startAfternoon = new Date(currentDate);
+      startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
+      const endAfternoon = new Date(currentDate);
+      endAfternoon.setHours(19, 0, 0); // Set afternoon end time to 7:00 PM
+
+      if (currentDate >= startMorning && currentDate <= endMorning) {
+        this.IsCalendarShow = true;
+      } else if (
+        currentDate >= startAfternoon &&
+        currentDate <= endAfternoon
+      ) {
+        this.IsCalendarShow = true;
+      } else {
+        this.IsCalendarShow = false;
+      }
       this.calendarOptions = {
         plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
         headerToolbar: {
@@ -137,61 +160,6 @@ export class CalendarComponent implements OnInit {
           start: new Date(),
           end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),
         },
-        slotMinTime: '05:00:00', // Default slotMinTime
-        slotMaxTime: '20:00:00', // Default slotMaxTime
-        datesSet: (info) => {
-          const currentStart = info.start;
-          const currentEnd = info.end;
-
-          const startMorning = new Date(currentStart);
-          startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
-
-          const endMorning = new Date(currentStart);
-          endMorning.setHours(8, 0, 0); // Set morning end time to 8:00 AM
-
-          const startAfternoon = new Date(currentStart);
-          startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
-
-          const endAfternoon = new Date(currentStart);
-          endAfternoon.setHours(19, 0, 0); // Set afternoon end time to 7:00 PM
-
-          if (currentStart >= startMorning && currentEnd <= endMorning) {
-            this.calendarOptions.slotMinTime = '05:00:00';
-            this.calendarOptions.slotMaxTime = '08:00:00';
-            this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
-          } else if (
-            currentStart >= startAfternoon &&
-            currentEnd <= endAfternoon
-          ) {
-            this.calendarOptions.slotMinTime = '15:00:00';
-            this.calendarOptions.slotMaxTime = '19:00:00';
-            this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
-          } else {
-            this.calendarOptions.slotMinTime = '05:00:00';
-            this.calendarOptions.slotMaxTime = '20:00:00';
-            this.calendarOptions.slotLabelInterval = '01:00:00'; // Default interval
-          }
-        },
-      };
-    } else if (!this.customerCalendar) {
-      this.calendarOptions = {
-        plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-        },
-        initialView: 'timeGridWeek',
-        weekends: true,
-        editable: false,
-        selectable: false,
-        selectMirror: true,
-        dayMaxEvents: true,
-        select: this.handleDateSelect.bind(this),
-        eventClick: this.handleEventClick.bind(this),
-        eventsSet: this.handleEvents.bind(this),
-        slotMinTime: '05:00:00', // Default slotMinTime
-        slotMaxTime: '20:00:00', // Default slotMaxTime
         datesSet: (info) => {
           const currentDate = new Date();
           const startMorning = new Date(currentDate);
@@ -221,12 +189,34 @@ export class CalendarComponent implements OnInit {
           }
         },
       };
+    } else if (!this.customerCalendar) {
+      this.IsCalendarShow = true;
+      this.calendarOptions = {
+        plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+        },
+        initialView: 'timeGridWeek',
+        weekends: true,
+        editable: false,
+        selectable: false,
+        selectMirror: true,
+        dayMaxEvents: true,
+        select: this.handleDateSelect.bind(this),
+        eventClick: this.handleEventClick.bind(this),
+        eventsSet: this.handleEvents.bind(this),
+        slotMinTime: '05:00:00',
+        slotMaxTime: '20:00:00',
+      };
     }
   }
   handleDateSelect(selectInfo: DateSelectArg) {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
+    debugger
     var statusId;
     this.datetimeRangError = false;
     if (type === 'editEvent') {
@@ -237,8 +227,8 @@ export class CalendarComponent implements OnInit {
         this.calendarForm.setValue({
           id: row.event.id,
           title: row.event.title,
-          startDate: formatDate(row.event.start, 'yyyy-MM-dd', 'en') || '',
-          endDate: formatDate(row.event.end, 'yyyy-MM-dd', 'en') || '',
+          startDate: formatDate(row.event.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
+          endDate: formatDate(row.event.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
           details: row.event.extendedProps.details,
         });
       } else if (!this.customerCalendar) {
@@ -264,7 +254,7 @@ export class CalendarComponent implements OnInit {
         size: 'lg',
       });
     }
-    if (!this.customerCalendar) {
+    if (!this.customerCalendar && statusId == 1) {
       this.modalService.open(this.eventWindow2, {
         ariaLabelledBy: 'modal-basic-title',
         size: 'md',
@@ -309,7 +299,7 @@ export class CalendarComponent implements OnInit {
             );
           }
         },
-        error: (error: any) => {},
+        error: (error: any) => { },
       });
     }
   }
@@ -365,7 +355,7 @@ export class CalendarComponent implements OnInit {
             'right'
           );
         },
-        error: (error: any) => {},
+        error: (error: any) => { },
       });
     }
   }
@@ -416,10 +406,10 @@ export class CalendarComponent implements OnInit {
           x.statusId == 1
             ? 'fc-event-info'
             : x.statusId == 2
-            ? 'fc-event-success'
-            : x.statusId == 3
-            ? 'fc-event-danger'
-            : '';
+              ? 'fc-event-success'
+              : x.statusId == 3
+                ? 'fc-event-danger'
+                : '';
         x.groupId = x.statusId.toString();
         x.allDay = false;
       });
@@ -438,7 +428,7 @@ export class CalendarComponent implements OnInit {
       const timeDifference = Math.abs(
         startDateObj.getTime() - endDateObj.getTime()
       );
-      const maxTimeDifference = 2 * 60 * 60 * 1000;
+      const maxTimeDifference = 1 * 60 * 60 * 1000;
 
       if (startDateObj < endDateObj && timeDifference == maxTimeDifference) {
         this.datetimeRangError = false;
@@ -449,10 +439,10 @@ export class CalendarComponent implements OnInit {
       }
     }
   }
-  approveAndRejectBooking() {
+  approveAndRejectBooking(Status) {
     var obj = {
       BookinId: this.bookinStatusForm.value.Id,
-      StatusId: +this.bookinStatusForm.value.Status,
+      StatusId: Status,
     };
     this.adminService.approveAndRejectBooking(obj).subscribe({
       next: (res: any) => {
@@ -461,15 +451,15 @@ export class CalendarComponent implements OnInit {
         );
         if (idx > -1) {
           this.calendarEvents[idx].groupId =
-            this.bookinStatusForm.value.Status.toString();
+            Status.toString();
           this.calendarEvents[idx].className =
             this.calendarEvents[idx].groupId == '1'
               ? 'fc-event-info'
               : this.calendarEvents[idx].groupId == '2'
-              ? 'fc-event-success'
-              : this.calendarEvents[idx].groupId == '3'
-              ? 'fc-event-danger'
-              : '';
+                ? 'fc-event-success'
+                : this.calendarEvents[idx].groupId == '3'
+                  ? 'fc-event-danger'
+                  : '';
         }
         this.tempEvents = this.calendarEvents;
         this.calendarOptions.initialEvents = this.calendarEvents;
@@ -478,7 +468,7 @@ export class CalendarComponent implements OnInit {
         this.bookinStatusForm.reset();
         this.modalService.dismissAll();
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 }
