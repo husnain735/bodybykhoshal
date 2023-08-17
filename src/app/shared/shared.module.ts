@@ -62,7 +62,7 @@ const icons = {
     MaterialModule,
     FullCalendarModule,
     FontAwesomeModule,
-    NgxDatatableModule
+    NgxDatatableModule,
   ],
   exports: [
     FormsModule,
@@ -78,7 +78,7 @@ const icons = {
     CalendarComponent,
     DateTimePickerComponent,
     FontAwesomeModule,
-    NgxDatatableModule
+    NgxDatatableModule,
   ]
 })
 export class SharedModule {
