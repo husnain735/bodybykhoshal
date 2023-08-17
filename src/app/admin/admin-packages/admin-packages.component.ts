@@ -5,6 +5,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { AdminService } from 'src/app/shared/services/admin.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-packages',
@@ -67,7 +68,20 @@ export class AdminPackagesComponent implements OnInit {
   openModel(model) {
     this.modalService.open(model, {
       ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
+      size: 'md',
+    });
+  }
+  deleteSelected() {
+    Swal.fire({
+      title: 'Are you sure want to approve ?',
+      showCancelButton: true,
+      confirmButtonColor: '#8963ff',
+      cancelButtonColor: '#fb7823',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.value) {
+        
+      }
     });
   }
 }

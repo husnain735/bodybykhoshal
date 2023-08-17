@@ -1,17 +1,18 @@
 <div class="row mx-0 my-2">
   <div class="col-md-12 col-sm-12">
     <div class="panel-body">
-      <full-calendar *ngIf="IsCalendarShow"
+      <!-- *ngIf="IsCalendarShow" -->
+      <full-calendar 
         [options]="calendarOptions"
         [ngClass]="customerCalendar ? 'customer-calendar' : 'admin-calendar'"
       >
       </full-calendar>
-      <ng-container *ngIf="!IsCalendarShow">
+      <!-- <ng-container *ngIf="!IsCalendarShow">
         <div class="warning-message-container">
           <span class="warning-message-title">
             Booking time is close.</span>
         </div>
-      </ng-container>
+      </ng-container> -->
     </div>
   </div>
 </div>

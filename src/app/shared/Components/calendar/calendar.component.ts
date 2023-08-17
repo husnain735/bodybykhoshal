@@ -122,26 +122,26 @@ export class CalendarComponent implements OnInit {
   }
   initailizCalendar() {
     if (this.customerCalendar) {
-      const currentDate = new Date();
-      const startMorning = new Date(currentDate);
-      startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
-      const endMorning = new Date(currentDate);
-      endMorning.setHours(15, 0, 0); // Set morning end time to 8:00 AM
-      const startAfternoon = new Date(currentDate);
-      startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
-      const endAfternoon = new Date(currentDate);
-      endAfternoon.setHours(19, 0, 0); // Set afternoon end time to 7:00 PM
+      // const currentDate = new Date();
+      // const startMorning = new Date(currentDate);
+      // startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
+      // const endMorning = new Date(currentDate);
+      // endMorning.setHours(15, 0, 0); // Set morning end time to 8:00 AM
+      // const startAfternoon = new Date(currentDate);
+      // startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
+      // const endAfternoon = new Date(currentDate);
+      // endAfternoon.setHours(19, 0, 0); // Set afternoon end time to 7:00 PM
 
-      if (currentDate >= startMorning && currentDate <= endMorning) {
-        this.IsCalendarShow = true;
-      } else if (
-        currentDate >= startAfternoon &&
-        currentDate <= endAfternoon
-      ) {
-        this.IsCalendarShow = true;
-      } else {
-        this.IsCalendarShow = false;
-      }
+      // if (currentDate >= startMorning && currentDate <= endMorning) {
+      //   this.IsCalendarShow = true;
+      // } else if (
+      //   currentDate >= startAfternoon &&
+      //   currentDate <= endAfternoon
+      // ) {
+      //   this.IsCalendarShow = true;
+      // } else {
+      //   this.IsCalendarShow = false;
+      // }
       this.calendarOptions = {
         plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
         headerToolbar: {
@@ -164,34 +164,36 @@ export class CalendarComponent implements OnInit {
           start: new Date(),
           end: new Date(new Date().getTime() + 6 * 24 * 60 * 60 * 1000),
         },
-        datesSet: (info) => {
-          const currentDate = new Date();
-          const startMorning = new Date(currentDate);
-          startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
-          const endMorning = new Date(currentDate);
-          endMorning.setHours(15, 0, 0); // Set morning end time to 8:00 AM
-          const startAfternoon = new Date(currentDate);
-          startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
-          const endAfternoon = new Date(currentDate);
-          endAfternoon.setHours(19, 0, 0); // Set afternoon end time to 7:00 PM
+        slotMinTime: '05:00:00',
+        slotMaxTime: '20:00:00',
+        // datesSet: (info) => {
+        //   const currentDate = new Date();
+        //   const startMorning = new Date(currentDate);
+        //   startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
+        //   const endMorning = new Date(currentDate);
+        //   endMorning.setHours(15, 0, 0); // Set morning end time to 8:00 AM
+        //   const startAfternoon = new Date(currentDate);
+        //   startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
+        //   const endAfternoon = new Date(currentDate);
+        //   endAfternoon.setHours(19, 0, 0); // Set afternoon end time to 7:00 PM
 
-          if (currentDate >= startMorning && currentDate <= endMorning) {
-            this.calendarOptions.slotMinTime = '05:00:00';
-            this.calendarOptions.slotMaxTime = '15:00:00';
-            this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
-          } else if (
-            currentDate >= startAfternoon &&
-            currentDate <= endAfternoon
-          ) {
-            this.calendarOptions.slotMinTime = '15:00:00';
-            this.calendarOptions.slotMaxTime = '19:00:00';
-            this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
-          } else {
-            this.calendarOptions.slotMinTime = '08:00:00';
-            this.calendarOptions.slotMaxTime = '19:00:00';
-            this.calendarOptions.slotLabelInterval = '01:00:00'; // Default interval
-          }
-        },
+        //   if (currentDate >= startMorning && currentDate <= endMorning) {
+        //     this.calendarOptions.slotMinTime = '05:00:00';
+        //     this.calendarOptions.slotMaxTime = '15:00:00';
+        //     this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
+        //   } else if (
+        //     currentDate >= startAfternoon &&
+        //     currentDate <= endAfternoon
+        //   ) {
+        //     this.calendarOptions.slotMinTime = '15:00:00';
+        //     this.calendarOptions.slotMaxTime = '19:00:00';
+        //     this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
+        //   } else {
+        //     this.calendarOptions.slotMinTime = '08:00:00';
+        //     this.calendarOptions.slotMaxTime = '19:00:00';
+        //     this.calendarOptions.slotLabelInterval = '01:00:00'; // Default interval
+        //   }
+        // },
       };
     } else if (!this.customerCalendar) {
       this.IsCalendarShow = true;
