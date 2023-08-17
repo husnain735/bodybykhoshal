@@ -34,6 +34,7 @@ import { HomeService } from '../../services/home.service';
 import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
 import { AdminService } from '../../services/admin.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-calendar',
@@ -104,7 +105,8 @@ export class CalendarComponent implements OnInit {
     public calendarService: CalendarService,
     private modalService: NgbModal,
     private homeService: HomeService,
-    private adminService: AdminService // private toastr: ToastrService
+    private adminService: AdminService,
+    private toastr: ToastrService
   ) {
     this.dialogTitle = 'Add New Event';
     const blankObject = {} as Calendar;
@@ -116,13 +118,15 @@ export class CalendarComponent implements OnInit {
     });
   }
   ngOnInit() {
-
+    this.initailizCalendar()
+  }
+  initailizCalendar() {
     if (this.customerCalendar) {
       const currentDate = new Date();
       const startMorning = new Date(currentDate);
       startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
       const endMorning = new Date(currentDate);
-      endMorning.setHours(8, 0, 0); // Set morning end time to 8:00 AM
+      endMorning.setHours(15, 0, 0); // Set morning end time to 8:00 AM
       const startAfternoon = new Date(currentDate);
       startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
       const endAfternoon = new Date(currentDate);
@@ -165,7 +169,7 @@ export class CalendarComponent implements OnInit {
           const startMorning = new Date(currentDate);
           startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
           const endMorning = new Date(currentDate);
-          endMorning.setHours(8, 0, 0); // Set morning end time to 8:00 AM
+          endMorning.setHours(15, 0, 0); // Set morning end time to 8:00 AM
           const startAfternoon = new Date(currentDate);
           startAfternoon.setHours(15, 0, 0); // Set afternoon start time to 3:00 PM
           const endAfternoon = new Date(currentDate);
@@ -173,7 +177,7 @@ export class CalendarComponent implements OnInit {
 
           if (currentDate >= startMorning && currentDate <= endMorning) {
             this.calendarOptions.slotMinTime = '05:00:00';
-            this.calendarOptions.slotMaxTime = '08:00:00';
+            this.calendarOptions.slotMaxTime = '15:00:00';
             this.calendarOptions.slotLabelInterval = { minutes: 60 }; // Show slots every 1 hour
           } else if (
             currentDate >= startAfternoon &&
@@ -209,6 +213,7 @@ export class CalendarComponent implements OnInit {
         eventsSet: this.handleEvents.bind(this),
         slotMinTime: '05:00:00',
         slotMaxTime: '20:00:00',
+        firstDay: new Date().getDay(),
       };
     }
   }
@@ -216,7 +221,6 @@ export class CalendarComponent implements OnInit {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
-    debugger
     var statusId;
     this.datetimeRangError = false;
     if (type === 'editEvent') {
@@ -293,7 +297,15 @@ export class CalendarComponent implements OnInit {
 
             this.showNotification(
               'success',
-              'Save Event Successfully...!!!',
+              'Booking save successfully...!!!',
+              'top',
+              'right'
+            );
+          } else {
+            this.modalService.dismissAll();
+            this.showNotification(
+              'warning',
+              'The booking limit for today has been exceeded.',
               'top',
               'right'
             );
@@ -350,7 +362,7 @@ export class CalendarComponent implements OnInit {
           this.modalService.dismissAll();
           this.showNotification(
             'success',
-            'Edit Event Successfully...!!!',
+            'Booking edit Successfully...!!!',
             'top',
             'right'
           );
@@ -394,30 +406,37 @@ export class CalendarComponent implements OnInit {
     xpos: string
   ) {
     if (eventType === 'success') {
-      // this.toastr.success(message, '', {
-      //   positionClass: 'toast-' + ypos + '-' + xpos,
-      // });
+      this.toastr.success(message, '', {
+        positionClass: 'toast-' + ypos + '-' + xpos,
+      });
+    } else if (eventType === 'warning') {
+      this.toastr.warning(message, '', {
+        positionClass: 'toast-' + ypos + '-' + xpos,
+      });
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.calendarEvents != undefined && this.calendarEvents.length > 0) {
-      this.calendarEvents.forEach((x) => {
-        x.className =
-          x.statusId == 1
-            ? 'fc-event-info'
-            : x.statusId == 2
-              ? 'fc-event-success'
-              : x.statusId == 3
-                ? 'fc-event-danger'
-                : '';
-        x.groupId = x.statusId.toString();
-        x.allDay = false;
-      });
-      this.tempEvents = this.calendarEvents;
-      this.calendarOptions.initialEvents = this.calendarEvents;
-      const calendarEvents = this.calendarEvents.slice();
-      this.calendarOptions.events = calendarEvents;
-      this.calendarForm.reset();
+    if (this.customerCalendar) {
+      this.getCustomerBookings();
+    } else {
+      if (this.calendarEvents != undefined && this.calendarEvents.length > 0) {
+        this.calendarEvents.forEach((x) => {
+          x.className =
+            x.statusId == 1
+              ? 'fc-event-info'
+              : x.statusId == 2
+                ? 'fc-event-success'
+                : x.statusId == 3
+                  ? 'fc-event-danger'
+                  : '';
+          x.groupId = x.statusId.toString();
+          x.allDay = false;
+        });
+        this.tempEvents = this.calendarEvents;
+        this.calendarOptions.initialEvents = this.calendarEvents;
+        const calendarEvents = this.calendarEvents.slice();
+        this.calendarOptions.events = calendarEvents;
+      }
     }
   }
   validateDateRange(startDate, endDate) {
@@ -467,6 +486,30 @@ export class CalendarComponent implements OnInit {
         this.calendarOptions.events = calendarEvents;
         this.bookinStatusForm.reset();
         this.modalService.dismissAll();
+      },
+      error: (error: any) => { },
+    });
+  }
+  getCustomerBookings() {
+    this.homeService.getCustomerBookings().subscribe({
+      next: (res: any) => {
+        this.calendarEvents = res.body;
+        this.calendarEvents.forEach((x) => {
+          x.className =
+            x.statusId == 1
+              ? 'fc-event-info'
+              : x.statusId == 2
+                ? 'fc-event-success'
+                : x.statusId == 3
+                  ? 'fc-event-danger'
+                  : '';
+          x.groupId = x.statusId.toString();
+          x.allDay = false;
+        });
+        this.tempEvents = this.calendarEvents;
+        this.calendarOptions.initialEvents = this.calendarEvents;
+        const calendarEvents = this.calendarEvents.slice();
+        this.calendarOptions.events = calendarEvents;
       },
       error: (error: any) => { },
     });

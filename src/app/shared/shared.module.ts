@@ -27,6 +27,7 @@ import { DateTimePickerComponent } from './Components/date-time-picker/date-time
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ToastrModule } from 'ngx-toastr';
 
 const icons = {
   Facebook,
@@ -63,6 +64,7 @@ const icons = {
     FullCalendarModule,
     FontAwesomeModule,
     NgxDatatableModule,
+    ToastrModule.forRoot(),
   ],
   exports: [
     FormsModule,
@@ -79,6 +81,7 @@ const icons = {
     DateTimePickerComponent,
     FontAwesomeModule,
     NgxDatatableModule,
+    ToastrModule,
   ]
 })
 export class SharedModule {

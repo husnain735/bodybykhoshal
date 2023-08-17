@@ -33,4 +33,7 @@ export class AdminService {
   getAllCustomerPackages(): Observable<any>{
     return this.apiService.get(`${this.pageUrl}getAllCustomerPackages`);
   }
+  paymentApproved(obj: any){
+    return this.apiService.post(`${this.pageUrl}paymentApproved/`, obj);
+  }
 }

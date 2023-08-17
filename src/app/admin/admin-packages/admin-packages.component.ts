@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { AdminService } from 'src/app/shared/services/admin.service';
@@ -22,12 +23,15 @@ export class AdminPackagesComponent implements OnInit {
   scrollBarHorizontal = window.innerWidth < 1200;
   reorderable = true;
   loadingIndicator = true;
-
+  @ViewChild('openPaymentApproveModel')
+  openPaymentApproveModel?: TemplateRef<any>;
+  shoppingCartId: number = 0;
 
   constructor(
     public authService: AuthService,
     private adminService: AdminService,
     public router: Router,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit() {
@@ -43,8 +47,27 @@ export class AdminPackagesComponent implements OnInit {
       }
     })
   }
-  paymentApproved(packageObj) {
+  paymentApproved(StatusId) {
+    if (this.shoppingCartId != 0) {
+      var obj = {
+        ShoppingCartId: this.shoppingCartId,
+        StatusId: StatusId
+      }
+      this.adminService.paymentApproved(obj).subscribe({
+        next:(res: any) => {
+          this.shoppingCartId = 0;
+          this.modalService.dismissAll();
+          this.getAllCustomerPackages();
+        }, error:(error: any) => {
 
+        }
+      });
+    }
   }
- 
+  openModel(model) {
+    this.modalService.open(model, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+    });
+  }
 }

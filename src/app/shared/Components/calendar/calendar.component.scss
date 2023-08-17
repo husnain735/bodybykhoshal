@@ -30,3 +30,14 @@
     height: calc(100vh - 125px) !important;
   }
 }
+.warning-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 290px);
+}
+
+.warning-message-title {
+  font-size: 22px;
+  font-weight: 500;
+}
