@@ -39,4 +39,7 @@ export class AdminService {
   addSession(obj: any){
     return this.apiService.post(`${this.pageUrl}addSession/`, obj);
   }
+  completeSession(BookingId: number){
+    return this.apiService.get(`${this.pageUrl}completeSession/${BookingId}`);
+  }
 }

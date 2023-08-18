@@ -2,7 +2,7 @@
   <div class="col-md-12 col-sm-12">
     <div class="panel-body">
       <!-- *ngIf="IsCalendarShow" -->
-      <full-calendar 
+      <full-calendar
         [options]="calendarOptions"
         [ngClass]="customerCalendar ? 'customer-calendar' : 'admin-calendar'"
       >
@@ -156,6 +156,45 @@
         (click)="approveAndRejectBooking(2)"
       >
         Approve
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #eventWindow3 let-modal>
+  <div class="modal-header editRowModal">
+    <h4 class="modal-title" id="modal-basic-title">
+      <div class="table-modal-header">
+        <div class="modal-about" style="padding: 0 !important;">
+          <div class="fw-bold p-t-10 font-17">Complete Session</div>
+        </div>
+      </div>
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div
+    class="modal-footer-custom" style="justify-content: space-between !important;"
+    >
+    <button
+          type="button"
+          class="btn btn-light"
+          (click)="modal.close('Close click')"
+        >
+          Close
+        </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="completeSession()"
+      >
+        Complete Session
       </button>
     </div>
   </div>

@@ -88,6 +88,8 @@ export class CalendarComponent implements OnInit {
   eventWindow?: TemplateRef<any>;
   @ViewChild('eventWindow2')
   eventWindow2?: TemplateRef<any>;
+  @ViewChild('eventWindow3')
+  eventWindow3?: TemplateRef<any>;
   calCheck: any;
   @Input() customerCalendar;
   calendarOptions: CalendarOptions;
@@ -99,6 +101,7 @@ export class CalendarComponent implements OnInit {
   ];
   bookinStatusForm: UntypedFormGroup;
   IsCalendarShow: boolean;
+  BookingId: number = 0;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -267,6 +270,13 @@ export class CalendarComponent implements OnInit {
         size: 'md',
       });
     }
+    if (!this.customerCalendar && statusId == 2) {
+      this.BookingId = +row.event.id;
+      this.modalService.open(this.eventWindow3, {
+        ariaLabelledBy: 'modal-basic-title',
+        size: 'md',
+      });
+    }
   }
   saveEvent(form: UntypedFormGroup) {
     this.calendarData = form.value;
@@ -431,6 +441,8 @@ export class CalendarComponent implements OnInit {
               ? 'fc-event-success'
               : x.statusId == 3
               ? 'fc-event-danger'
+              : x.statusId == 4
+              ? 'fc-event-primary'
               : '';
           x.groupId = x.statusId.toString();
           x.allDay = false;
@@ -468,24 +480,35 @@ export class CalendarComponent implements OnInit {
     };
     this.adminService.approveAndRejectBooking(obj).subscribe({
       next: (res: any) => {
-        var idx = this.calendarEvents.findIndex(
-          (x) => +x.id == this.bookinStatusForm.value.Id
-        );
-        if (idx > -1) {
-          this.calendarEvents[idx].groupId = Status.toString();
-          this.calendarEvents[idx].className =
-            this.calendarEvents[idx].groupId == '1'
-              ? 'fc-event-info'
-              : this.calendarEvents[idx].groupId == '2'
-              ? 'fc-event-success'
-              : this.calendarEvents[idx].groupId == '3'
-              ? 'fc-event-danger'
-              : '';
+        if (res.body.success) {
+          var idx = this.calendarEvents.findIndex(
+            (x) => +x.id == this.bookinStatusForm.value.Id
+          );
+          if (idx > -1) {
+            this.calendarEvents[idx].groupId = Status.toString();
+            this.calendarEvents[idx].className =
+              this.calendarEvents[idx].groupId == '1'
+                ? 'fc-event-info'
+                : this.calendarEvents[idx].groupId == '2'
+                ? 'fc-event-success'
+                : this.calendarEvents[idx].groupId == '3'
+                ? 'fc-event-danger'
+                : this.calendarEvents[idx].groupId == '4'
+                ? 'fc-event-primary'
+                : '';
+          }
+          this.tempEvents = this.calendarEvents;
+          this.calendarOptions.initialEvents = this.calendarEvents;
+          const calendarEvents = this.calendarEvents.slice();
+          this.calendarOptions.events = calendarEvents;
+        } else {
+          this.showNotification(
+            'warning',
+            'The Session limit complete for this user.',
+            'top',
+            'right'
+          );
         }
-        this.tempEvents = this.calendarEvents;
-        this.calendarOptions.initialEvents = this.calendarEvents;
-        const calendarEvents = this.calendarEvents.slice();
-        this.calendarOptions.events = calendarEvents;
         this.bookinStatusForm.reset();
         this.modalService.dismissAll();
       },
@@ -504,6 +527,8 @@ export class CalendarComponent implements OnInit {
               ? 'fc-event-success'
               : x.statusId == 3
               ? 'fc-event-danger'
+              : x.statusId == 4
+              ? 'fc-event-primary'
               : '';
           x.groupId = x.statusId.toString();
           x.allDay = false;
@@ -519,12 +544,25 @@ export class CalendarComponent implements OnInit {
   addOneHourToDate(inputDateStr) {
     const inputDate = new Date(inputDateStr);
     const updatedDate = new Date(inputDate.getTime() + 60 * 60 * 1000); // Adding one hour in milliseconds
-
-    const formattedUpdatedDate = updatedDate
-      .toISOString()
-      .slice(0, 19)
-      .replace('T', ' ');
-
     return updatedDate;
+  }
+  completeSession() {
+    this.adminService.completeSession(this.BookingId).subscribe({
+      next:(res: any) => {
+        var idx = this.calendarEvents.findIndex(x => +x.id == this.BookingId);
+        if (idx > -1) {
+          this.calendarEvents[idx].className = 'fc-event-primary';
+          this.calendarEvents[idx].groupId = '4';
+        }
+        this.tempEvents = this.calendarEvents;
+        this.calendarOptions.initialEvents = this.calendarEvents;
+        const calendarEvents = this.calendarEvents.slice();
+        this.calendarOptions.events = calendarEvents;
+        this.modalService.dismissAll();
+        this.BookingId = 0;
+      }, error:(error: any) => {
+
+      }
+    });
   }
 }
