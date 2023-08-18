@@ -27,20 +27,20 @@ export class CustomerDashboardComponent implements OnInit {
   ngOnInit() {
     // this.calendarEventsInput = new Object();
     this.notification = new Object();
-    this.GetPackage();
+    this.GetCustomerPackage();
     this.getCustomerBookings();
   }
 
-  GetPackage() {
+  GetCustomerPackage() {
     this.package = new Object();
-    this.homeService.GetPackage(this.PackageId).subscribe({
+    this.homeService.GetCustomerPackage().subscribe({
       next: (res: any) => {
         this.package = res.body;
-        var sessionEndingDate = this.addDaysToDate(
-          this.package.createdDate,
-          this.package.totalNumberOfSessions
-        );
-        this.startCounter(sessionEndingDate);
+        // var sessionEndingDate = this.addDaysToDate(
+        //   this.package.createdDate,
+        //   this.package.totalNumberOfSessions
+        // );
+        //this.startCounter(sessionEndingDate);
         this.getCustomerNotification();
       },
       error: (error) => {},

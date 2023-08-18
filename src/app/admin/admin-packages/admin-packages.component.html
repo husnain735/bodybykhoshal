@@ -2,11 +2,25 @@
   <div class="card-body">
     <div class="row">
       <div class="col-sm-12">
-        <ngx-datatable #table class="material" [rows]="packages" columnMode="force" [headerHeight]="50"
-          [footerHeight]="50" rowHeight="auto" [limit]="6" [scrollbarH]="scrollBarHorizontal"
-          [reorderable]="reorderable">
+        <ngx-datatable
+          #table
+          class="material"
+          [rows]="packages"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          rowHeight="auto"
+          [limit]="6"
+          [scrollbarH]="scrollBarHorizontal"
+          [reorderable]="reorderable"
+        >
           <ngx-datatable-column name="Name">
-            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+            <ng-template
+              let-row="row"
+              let-value="value"
+              let-i="index"
+              ngx-datatable-cell-template
+            >
               <div class="name-col-style">
                 {{ row.firstName + " " + row.lastName }}
               </div>
@@ -16,7 +30,12 @@
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="Package Name">
-            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+            <ng-template
+              let-row="row"
+              let-value="value"
+              let-i="index"
+              ngx-datatable-cell-template
+            >
               <div class="name-col-style">
                 {{ row.packageName }}
               </div>
@@ -37,10 +56,33 @@
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="Actions" [sortable]="false">
-            <ng-template let-value="value" let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-              <button *ngIf="row.statusId == 1" type="button" class="btn btn-success"
-                (click)="shoppingCartId = row.shoppingCartId;openModel(openPaymentApproveModel)">
+            <ng-template
+              let-value="value"
+              let-row="row"
+              let-rowIndex="rowIndex"
+              ngx-datatable-cell-template
+            >
+              <button
+                *ngIf="row.statusId == 1"
+                type="button"
+                class="btn btn-success"
+                (click)="
+                  shoppingCartId = row.shoppingCartId;
+                  openModel(openPaymentApproveModel)
+                "
+              >
                 Payment Received
+              </button>
+              <button
+                *ngIf="row.statusId == 2"
+                type="button"
+                class="btn btn-primary"
+                (click)="
+                  shoppingCartId = row.shoppingCartId;
+                  openModel(openAddSessionsModel)
+                "
+              >
+                Gift Session
               </button>
             </ng-template>
           </ngx-datatable-column>
@@ -58,17 +100,70 @@
         </div>
       </div>
     </h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
       <span aria-hidden="true"><i class="material-icons">close</i></span>
     </button>
   </div>
   <div class="modal-body">
-    <div class="modal-footer-custom" style="justify-content: space-between !important;">
+    <div
+      class="modal-footer-custom"
+      style="justify-content: space-between !important"
+    >
       <button type="button" class="btn btn-danger" (click)="paymentApproved(3)">
         Reject
       </button>
-      <button type="button" class="btn btn-success" (click)="paymentApproved(2)">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="paymentApproved(2)"
+      >
         Approve
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #openAddSessionsModel let-modal>
+  <div class="modal-header editRowModal">
+    <h4 class="modal-title" id="modal-basic-title">
+      <div class="table-modal-header">
+        <div class="modal-about">
+          <div class="fw-bold p-t-10 font-17">Add Sessions</div>
+        </div>
+      </div>
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-outline">
+      <input
+        type="number"
+        min="0"
+        name="sessionCount"
+        class="form-control"
+        [(ngModel)]="sessionCount"
+      />
+    </div>
+    <div
+      class="modal-footer-custom mt-2"
+    >
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="addSession()"
+      >
+        Add Sessions
       </button>
     </div>
   </div>

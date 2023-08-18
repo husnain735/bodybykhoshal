@@ -36,4 +36,7 @@ export class AdminService {
   paymentApproved(obj: any){
     return this.apiService.post(`${this.pageUrl}paymentApproved/`, obj);
   }
+  addSession(obj: any){
+    return this.apiService.post(`${this.pageUrl}addSession/`, obj);
+  }
 }

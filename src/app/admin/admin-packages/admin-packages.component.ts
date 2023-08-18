@@ -27,7 +27,7 @@ export class AdminPackagesComponent implements OnInit {
   @ViewChild('openPaymentApproveModel')
   openPaymentApproveModel?: TemplateRef<any>;
   shoppingCartId: number = 0;
-
+  sessionCount = 0;
   constructor(
     public authService: AuthService,
     private adminService: AdminService,
@@ -81,6 +81,22 @@ export class AdminPackagesComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         
+      }
+    });
+  }
+  addSession() {
+    var obj = {
+      ShoppingCartId: this.shoppingCartId,
+      SessionCount: this.sessionCount
+    }
+    this.adminService.addSession(obj).subscribe({
+      next:(res: any) => {
+        this.shoppingCartId = 0;
+        this.sessionCount = 0;
+        this.modalService.dismissAll();
+        this.getAllCustomerPackages();
+      }, error: (error: any) => {
+
       }
     });
   }

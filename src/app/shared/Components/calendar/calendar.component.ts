@@ -118,7 +118,7 @@ export class CalendarComponent implements OnInit {
     });
   }
   ngOnInit() {
-    this.initailizCalendar()
+    this.initailizCalendar();
   }
   initailizCalendar() {
     if (this.customerCalendar) {
@@ -244,12 +244,13 @@ export class CalendarComponent implements OnInit {
         });
       }
     } else {
+      var endDate = this.addOneHourToDate(row.start);
       statusId = 1;
       this.calendarForm.setValue({
         id: 0,
         title: '',
         startDate: formatDate(row.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
-        endDate: formatDate(row.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
+        endDate: formatDate(endDate, 'yyyy-MM-dd HH:mm:ss', 'en'),
         details: '',
       });
       this.isEditClick = false;
@@ -313,7 +314,7 @@ export class CalendarComponent implements OnInit {
             );
           }
         },
-        error: (error: any) => { },
+        error: (error: any) => {},
       });
     }
   }
@@ -369,7 +370,7 @@ export class CalendarComponent implements OnInit {
             'right'
           );
         },
-        error: (error: any) => { },
+        error: (error: any) => {},
       });
     }
   }
@@ -427,10 +428,10 @@ export class CalendarComponent implements OnInit {
             x.statusId == 1
               ? 'fc-event-info'
               : x.statusId == 2
-                ? 'fc-event-success'
-                : x.statusId == 3
-                  ? 'fc-event-danger'
-                  : '';
+              ? 'fc-event-success'
+              : x.statusId == 3
+              ? 'fc-event-danger'
+              : '';
           x.groupId = x.statusId.toString();
           x.allDay = false;
         });
@@ -471,16 +472,15 @@ export class CalendarComponent implements OnInit {
           (x) => +x.id == this.bookinStatusForm.value.Id
         );
         if (idx > -1) {
-          this.calendarEvents[idx].groupId =
-            Status.toString();
+          this.calendarEvents[idx].groupId = Status.toString();
           this.calendarEvents[idx].className =
             this.calendarEvents[idx].groupId == '1'
               ? 'fc-event-info'
               : this.calendarEvents[idx].groupId == '2'
-                ? 'fc-event-success'
-                : this.calendarEvents[idx].groupId == '3'
-                  ? 'fc-event-danger'
-                  : '';
+              ? 'fc-event-success'
+              : this.calendarEvents[idx].groupId == '3'
+              ? 'fc-event-danger'
+              : '';
         }
         this.tempEvents = this.calendarEvents;
         this.calendarOptions.initialEvents = this.calendarEvents;
@@ -489,7 +489,7 @@ export class CalendarComponent implements OnInit {
         this.bookinStatusForm.reset();
         this.modalService.dismissAll();
       },
-      error: (error: any) => { },
+      error: (error: any) => {},
     });
   }
   getCustomerBookings() {
@@ -501,10 +501,10 @@ export class CalendarComponent implements OnInit {
             x.statusId == 1
               ? 'fc-event-info'
               : x.statusId == 2
-                ? 'fc-event-success'
-                : x.statusId == 3
-                  ? 'fc-event-danger'
-                  : '';
+              ? 'fc-event-success'
+              : x.statusId == 3
+              ? 'fc-event-danger'
+              : '';
           x.groupId = x.statusId.toString();
           x.allDay = false;
         });
@@ -513,7 +513,18 @@ export class CalendarComponent implements OnInit {
         const calendarEvents = this.calendarEvents.slice();
         this.calendarOptions.events = calendarEvents;
       },
-      error: (error: any) => { },
+      error: (error: any) => {},
     });
+  }
+  addOneHourToDate(inputDateStr) {
+    const inputDate = new Date(inputDateStr);
+    const updatedDate = new Date(inputDate.getTime() + 60 * 60 * 1000); // Adding one hour in milliseconds
+
+    const formattedUpdatedDate = updatedDate
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+
+    return updatedDate;
   }
 }
