@@ -5,33 +5,63 @@
   (@slideUp.done)="(isFormOpenChild || isAdminChatChild) && onAnimationDone()"
 >
   <div class="chat-box shadow">
-    <div *ngIf="isAdminChatChild" class="d-flex justify-content-between align-items-center p-3" style="background-color: #ececec; border: 1px solid #ebebeb;">
+    <div
+      *ngIf="isAdminChatChild"
+      class="d-flex justify-content-between align-items-center p-3"
+      style="background-color: #ececec; border: 1px solid #ebebeb"
+    >
       <div>
-        <span class="userName">{{UserName}}</span>
+        <span class="userName">{{ UserName }}</span>
       </div>
       <div>
         <mat-icon class="cursor-pointer" (click)="closeChat()">close</mat-icon>
       </div>
     </div>
-    <div *ngIf="!isAdminChatChild" class="d-flex justify-content-between align-items-center p-3" style="background-color: #ececec; border: 1px solid #ebebeb;">
+    <div
+      *ngIf="!isAdminChatChild"
+      class="d-flex justify-content-between align-items-center p-3"
+      style="background-color: #ececec; border: 1px solid #ebebeb"
+    >
       <div>
         <span class="userName">Team BBK</span>
       </div>
     </div>
     <div #scrollMe class="card-body chat-content">
       <div id="scrollToSection" *ngFor="let chat of chats; let i = index">
-        <div *ngIf="(isFormOpenChild && chat.roleId == 1) || (isAdminChatChild && chat.roleId == 2)" class="chat-item chat-left">
+        <div
+          *ngIf="
+            (isFormOpenChild && chat.roleId == 1) ||
+            (isAdminChatChild && chat.roleId == 2)
+          "
+          class="chat-item chat-left"
+        >
           <span class="right-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
             <div class="chat-text">{{ chat.content }}</div>
-            <div class="chat-time" title="{{chat.timestamp | date : 'MM-dd-yyyy HH:mm'}}">{{ chat.timestamp | date : "HH:mm" }}</div>
+            <div
+              class="chat-time"
+              title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}"
+            >
+              {{ chat.timestamp | date : "HH:mm" }}
+            </div>
           </div>
         </div>
-        <div *ngIf="(isFormOpenChild && chat.roleId == 2) || (isAdminChatChild && chat.roleId == 1)" class="chat-item chat-right">
+        <div
+          *ngIf="
+            (isFormOpenChild && chat.roleId == 2) ||
+            (isAdminChatChild && chat.roleId == 1)
+          "
+          class="chat-item chat-right"
+        >
           <span class="left-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
             <div class="chat-text">{{ chat.content }}</div>
-            <div class="chat-time" title="{{chat.timestamp | date : 'MM-dd-yyyy HH:mm'}}">{{ chat.timestamp | date : "HH:mm" }}</div>
+            <div
+              class="chat-time"
+              title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}"
+            >
+              {{ chat.timestamp | date : "HH:mm" }}
+            </div>
           </div>
         </div>
       </div>
@@ -46,16 +76,39 @@
           name="chat"
           [(ngModel)]="chat"
         /> -->
-        <textarea rows="3" (keydown.enter)="isFormOpenChild  ? saveChat() : isAdminChatChild  ? saveChatForAdmin() : ''"
-          style="padding-right: 60px; resize: none;"
+        <textarea
+          rows="3"
+          (keydown.enter)="
+            isFormOpenChild
+              ? saveChat()
+              : isAdminChatChild
+              ? saveChatForAdmin()
+              : ''
+          "
+          style="padding-right: 82px; resize: none"
           class="form-control"
           placeholder="Type a message"
           name="chat"
           [(ngModel)]="chat"
         ></textarea>
-        <button class="btn btn-danger" (click)="isFormOpenChild ? saveChat() : isAdminChatChild ? saveChatForAdmin() : ''">
-          <i class="far fa-paper-plane"></i>
-        </button>
+        <div>
+          <div class="chatBox-upload-icon">
+            <span class="material-icons">file_upload</span>
+            <input type="file" class="chatBox-upload-input" />
+          </div>
+          <button
+            class="btn btn-danger"
+            (click)="
+              isFormOpenChild
+                ? saveChat()
+                : isAdminChatChild
+                ? saveChatForAdmin()
+                : ''
+            "
+          >
+            <i class="far fa-paper-plane"></i>
+          </button>
+        </div>
       </form>
     </div>
   </div>
