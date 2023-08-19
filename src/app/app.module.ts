@@ -8,6 +8,7 @@ import { SharedModule } from './shared/shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/services/auth-Interceptor.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PackagesComponent } from './admin/packages/packages.component';
 
 
 @NgModule({

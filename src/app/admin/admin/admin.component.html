@@ -15,8 +15,15 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/admin/packages">Packages</a>
+          <li [ngClass]="router.url == '/admin/customer-packages' ? 'bg-red ' : ''" class="nav-item">
+            <a [ngClass]="
+            router.url == '/admin/customer-packages' ? 'text-white  ' : ''
+          " class="nav-link active" aria-current="page" routerLink="/admin/customer-packages">Customers Packages</a>
+          </li>
+          <li [ngClass]="router.url == '/admin/packages' ? 'bg-red ' : ''" class="nav-item">
+            <a [ngClass]="
+            router.url == '/admin/packages' ? 'text-white  ' : ''
+          " class="nav-link active" aria-current="page" routerLink="/admin/packages">Add Packages</a>
           </li>
         </ul>
         <div class="d-flex">

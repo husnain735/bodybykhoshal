@@ -16,7 +16,6 @@ export class AdminService {
   }
   GetAdminChatWithCustomer(obj: any){
     return this.apiService.post(`${this.pageUrl}GetAdminChatWithCustomer/`, obj);
-    return null;
   }
   saveChatForAdmin(obj: any){
     return this.apiService.post(`${this.pageUrl}saveChatForAdmin/`, obj);
@@ -41,5 +40,14 @@ export class AdminService {
   }
   completeSession(BookingId: number){
     return this.apiService.get(`${this.pageUrl}completeSession/${BookingId}`);
+  }
+  GetPackages(){
+    return this.apiService.get(`${this.pageUrl}GetPackages`);
+  }
+  SavePackage(obj: any){
+    return this.apiService.post(`${this.pageUrl}SavePackage/`, obj);
+  }
+  DeletePackage(PackageId: number){
+    return this.apiService.get(`${this.pageUrl}DeletePackage/${PackageId}`);
   }
 }

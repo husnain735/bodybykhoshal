@@ -1,15 +1,9 @@
-<div
-  class="form-popup"
-  [@slideUp]="isFormOpenChild || isAdminChatChild ? 'open' : 'closed'"
+<div class="form-popup" [@slideUp]="isFormOpenChild || isAdminChatChild ? 'open' : 'closed'"
   *ngIf="isFormOpenChild || isAdminChatChild"
-  (@slideUp.done)="(isFormOpenChild || isAdminChatChild) && onAnimationDone()"
->
+  (@slideUp.done)="(isFormOpenChild || isAdminChatChild) && onAnimationDone()">
   <div class="chat-box shadow">
-    <div
-      *ngIf="isAdminChatChild"
-      class="d-flex justify-content-between align-items-center p-3"
-      style="background-color: #ececec; border: 1px solid #ebebeb"
-    >
+    <div *ngIf="isAdminChatChild" class="d-flex justify-content-between align-items-center p-3"
+      style="background-color: #ececec; border: 1px solid #ebebeb">
       <div>
         <span class="userName">{{ UserName }}</span>
       </div>
@@ -17,49 +11,38 @@
         <mat-icon class="cursor-pointer" (click)="closeChat()">close</mat-icon>
       </div>
     </div>
-    <div
-      *ngIf="!isAdminChatChild"
-      class="d-flex justify-content-between align-items-center p-3"
-      style="background-color: #ececec; border: 1px solid #ebebeb"
-    >
+    <div *ngIf="!isAdminChatChild" class="d-flex justify-content-between align-items-center p-3"
+      style="background-color: #ececec; border: 1px solid #ebebeb">
       <div>
         <span class="userName">Team BBK</span>
       </div>
     </div>
     <div #scrollMe class="card-body chat-content">
       <div id="scrollToSection" *ngFor="let chat of chats; let i = index">
-        <div
-          *ngIf="
+        <div *ngIf="
             (isFormOpenChild && chat.roleId == 1) ||
             (isAdminChatChild && chat.roleId == 2)
-          "
-          class="chat-item chat-left"
-        >
+          " class="chat-item chat-left">
           <span class="right-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
-            <div class="chat-text">{{ chat.content }}</div>
-            <div
-              class="chat-time"
-              title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}"
-            >
+            <div *ngIf="chat.chatType == 1" class="chat-text">{{ chat.content }}</div>
+            <div *ngIf="chat.chatType == 2"> <img class="chatBox-image" src="{{baseUrl + chat.content}}" alt=""
+                srcset=""></div>
+            <div class="chat-time" title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}">
               {{ chat.timestamp | date : "HH:mm" }}
             </div>
           </div>
         </div>
-        <div
-          *ngIf="
+        <div *ngIf="
             (isFormOpenChild && chat.roleId == 2) ||
             (isAdminChatChild && chat.roleId == 1)
-          "
-          class="chat-item chat-right"
-        >
+          " class="chat-item chat-right">
           <span class="left-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
-            <div class="chat-text">{{ chat.content }}</div>
-            <div
-              class="chat-time"
-              title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}"
-            >
+            <div *ngIf="chat.chatType == 1" class="chat-text">{{ chat.content }}</div>
+            <div *ngIf="chat.chatType == 2"> <img class="chatBox-image" src="{{baseUrl + chat.content}}" alt=""
+                srcset=""></div>
+            <div class="chat-time" title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}">
               {{ chat.timestamp | date : "HH:mm" }}
             </div>
           </div>
@@ -76,36 +59,27 @@
           name="chat"
           [(ngModel)]="chat"
         /> -->
-        <textarea
-          rows="3"
-          (keydown.enter)="
+        <textarea rows="3" (keydown.enter)="
             isFormOpenChild
               ? saveChat()
               : isAdminChatChild
               ? saveChatForAdmin()
               : ''
-          "
-          style="padding-right: 82px; resize: none"
-          class="form-control"
-          placeholder="Type a message"
-          name="chat"
-          [(ngModel)]="chat"
-        ></textarea>
+          " style="padding-right: 82px; resize: none" class="form-control" placeholder="Type a message" name="chat"
+          [(ngModel)]="chat"></textarea>
         <div>
           <div class="chatBox-upload-icon">
             <span class="material-icons">file_upload</span>
-            <input type="file" class="chatBox-upload-input" />
+            <input type="file" class="chatBox-upload-input" accept="image/*" (change)="handleFileChange($event)"
+              multiple="false" />
           </div>
-          <button
-            class="btn btn-danger"
-            (click)="
+          <button class="btn btn-danger" (click)="
               isFormOpenChild
                 ? saveChat()
                 : isAdminChatChild
                 ? saveChatForAdmin()
                 : ''
-            "
-          >
+            ">
             <i class="far fa-paper-plane"></i>
           </button>
         </div>

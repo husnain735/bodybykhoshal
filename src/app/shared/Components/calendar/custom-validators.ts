@@ -2,7 +2,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function timeRangeValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    debugger
+
     const startDate = control.get('startDate').value;
     const endDate = control.get('endDate').value;
 

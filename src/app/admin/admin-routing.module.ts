@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { AdminPackagesComponent } from './admin-packages/admin-packages.component';
 import { AdminBookingComponent } from '../admin-booking/admin-booking.component';
+import { PackagesComponent } from './packages/packages.component';
 
 const routes: Routes = [
   {
@@ -14,14 +15,14 @@ const routes: Routes = [
         component: AdminBookingComponent
       },
       {
-        path:'packages',
+        path:'customer-packages',
         component: AdminPackagesComponent
+      },
+      {
+        path:'packages',
+        component: PackagesComponent
       }
     ]
-  },
-  {
-    path:'packages',
-    component: AdminPackagesComponent
   }
 ];
 

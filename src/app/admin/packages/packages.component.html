@@ -1,0 +1,148 @@
+<div class="card mt-2">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-12 text-end mb-2">
+        <button type="button" class="btn btn-primary"
+          (click)="IsEdit = false;PackageForm.reset();openModel(addPackage)">
+          Add Package
+        </button>
+      </div>
+      <div class="col-sm-12">
+        <ngx-datatable #table class="material" [rows]="packages" columnMode="force" [headerHeight]="50"
+          [footerHeight]="50" rowHeight="auto" [limit]="6" [scrollbarH]="scrollBarHorizontal"
+          [reorderable]="reorderable">
+          <ngx-datatable-column name="Package Name">
+            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+              <div class="name-col-style">
+                {{ row.packageName }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Sessions">
+            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+              <div>{{ row.totalNumberOfSessions }} Sessions</div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Total Price">
+            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+              <div class="name-col-style">
+                {{ row.totalPrice }}$
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Price Per Session">
+            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+              <div class="name-col-style">
+                {{ row.pricePerSession }}$
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Actions">
+            <ng-template let-row="row" let-value="value" let-i="index" ngx-datatable-cell-template>
+              <span class="material-icons" (click)="editPackage(row,addPackage)">edit</span>
+              <span class="material-icons" (click)="PackageId = row.packagesId;openModel(deletePackage)">delete</span>
+            </ng-template>
+          </ngx-datatable-column> </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #addPackage let-modal>
+  <div class="modal-header editRowModal">
+    <h4 class="modal-title" id="modal-basic-title">
+      <div class="table-modal-header">
+        <div class="modal-about">
+          <div class="fw-bold p-t-10 font-17">{{!IsEdit ? 'Add Package' : 'Edit Package'}}</div>
+        </div>
+      </div>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="register-form" [formGroup]="PackageForm">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <label>Package Name<span class="text-danger">*</span></label>
+          <input type="text" class="form-control" placeholder="Package Name" formControlName="PackageName">
+          <div *ngIf="PackageForm.get('PackageName').touched && PackageForm.get('PackageName').hasError('required')">
+            <span class="text-danger">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <label>Total Sessions<span class="text-danger">*</span></label>
+          <input type="number" min="1" class="form-control" placeholder="Total Sessions"
+            formControlName="TotalNumberOfSessions">
+          <div
+            *ngIf="PackageForm.get('TotalNumberOfSessions').touched && PackageForm.get('TotalNumberOfSessions').hasError('required')">
+            <span class="text-danger">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <label>Price Per Session<span class="text-danger">*</span></label>
+          <input type="number" min="1" class="form-control" placeholder="Price Per Session"
+            formControlName="PricePerSession">
+          <div
+            *ngIf="PackageForm.get('PricePerSession').touched && PackageForm.get('PricePerSession').hasError('required')">
+            <span class="text-danger">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <label>Order<span class="text-danger">*</span></label>
+          <input type="number" min="1" class="form-control" placeholder="Order" formControlName="OrderId">
+          <div *ngIf="PackageForm.get('OrderId').touched && PackageForm.get('OrderId').hasError('required')">
+            <span class="text-danger">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <label>Description<span class="text-danger">*</span></label>
+          <textarea type="textarea" class="form-control" placeholder="Description"
+            formControlName="Description"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer-custom" style="display: flex; justify-content: space-between;">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="!PackageForm.valid" (click)="SavePackage()">
+          {{!IsEdit ? 'Save' : 'Edit'}}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #deletePackage let-modal>
+  <div class="modal-header editRowModal pt-3 px-3">
+    <h4 class="modal-title mb-0" id="modal-basic-title">
+      <div class="table-modal-header">
+        <div class="modal-about p-0">
+          <div class="fw-bold p-t-10 font-17">Delete Package</div>
+        </div>
+      </div>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+  </div>
+  <div class="modal-body pt-0 pb-3 px-3">
+    <p class="px-2" style="font-size: 16px;
+    font-weight: 500;">Are you sure want to delete this package ?</p>
+    <div class="modal-footer-custom" style="display: flex; justify-content: space-between;">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary" (click)="DeletePackage()">
+        Delete
+      </button>
+    </div>
+  </div>
+</ng-template>

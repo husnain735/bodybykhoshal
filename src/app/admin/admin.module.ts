@@ -5,13 +5,15 @@ import { AdminComponent } from './admin/admin.component';
 import { SharedModule } from '../shared/shared.module';
 import { AdminPackagesComponent } from './admin-packages/admin-packages.component';
 import { AdminBookingComponent } from '../admin-booking/admin-booking.component';
+import { PackagesComponent } from './packages/packages.component';
 
 
 @NgModule({
   declarations: [
     AdminComponent,
     AdminPackagesComponent,
-    AdminBookingComponent
+    AdminBookingComponent,
+    PackagesComponent
   ],
   imports: [
     CommonModule,
