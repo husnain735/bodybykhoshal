@@ -49,6 +49,13 @@
           </div>
         </div>
       </div> -->
+      <div class="row mx-0 my-2">
+        <div class="col-12 text-end">
+          <button type="button" class="btn btn-primary" (click)="syncwithGoogle()">
+          Sync with google
+        </button>
+        </div>
+      </div>
       <div>
         <app-calendar
           [customerCalendar]="customerCalendarEvent"
@@ -59,15 +66,13 @@
     <ng-container *ngIf="package.statusId == 1">
       <div class="warning-message-container">
         <span class="warning-message-title">
-          Please await approval from the admin for the selected package.</span
-        >
+          Please wait for the administrator to approve the package you have selected.</span>
       </div>
     </ng-container>
     <ng-container *ngIf="package.statusId == 0">
       <div class="warning-message-container">
         <span class="warning-message-title">
-          Please subscribe a package first.</span
-        >
+          Kindly select one of the available packages and subscribe to it.</span>
       </div>
     </ng-container>
     <div class="chat-box-position z-Index-1000">

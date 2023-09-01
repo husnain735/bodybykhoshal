@@ -36,89 +36,54 @@
     </button>
   </div>
   <div class="modal-body">
-    <form class="register-form" [formGroup]="calendarForm">
+    <div role="alert" class="alert show alert-has-icon alert-primary fade" style="align-items: center;">
+      <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+      Booking is only available during the hours of 5 am to 8 am and then again from 3 pm to 7 pm.
+    </div>
+
+    <form class="register-form card-body" [formGroup]="calendarForm">
       <div class="input-field col s12 d-none">
         <input formControlName="id" class="form-control" type="hidden" />
       </div>
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>Start Date<span class="text-danger">*</span></label>
-          <app-date-time-picker
-            formControlName="startDate"
-            name="startDate"
-          ></app-date-time-picker>
-          <small
-            class="form-text text-danger"
-            *ngIf="
-              !calendarForm.get('startDate')?.valid &&
-              calendarForm.get('startDate')?.touched
-            "
-          >
-            Start Date is required</small
-          >
+          <app-date-time-picker formControlName="startDate" name="startDate"></app-date-time-picker>
+          <small class="form-text text-danger" *ngIf="!calendarForm.get('startDate')?.valid && calendarForm.get('startDate')?.touched">
+            Start Date is required
+          </small>
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
           <label>End Date<span class="text-danger">*</span></label>
-          <app-date-time-picker
-            formControlName="endDate"
-            name="endDate"
-          ></app-date-time-picker>
-          <small
-            class="form-text text-danger"
-            *ngIf="
-              !calendarForm.get('endDate')?.valid &&
-              calendarForm.get('endDate')?.touched
-            "
-          >
-            End Date is required</small
-          >
+          <app-date-time-picker disabled formControlName="endDate" name="endDate"></app-date-time-picker>
+          <small class="form-text text-danger" *ngIf="!calendarForm.get('endDate')?.valid && calendarForm.get('endDate')?.touched">
+            End Date is required
+          </small>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="datetimeRangError">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
-          <small class="form-text text-danger" *ngIf="datetimeRangError">
-            Your booking range should be 1 hours</small
-          >
+          <small class="form-text text-danger" >Your booking range should be 1 hours</small>
+        </div>
+      </div>
+      <div class="row"  *ngIf="bookingTimeError">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+          <small class="form-text text-danger">You can not create booking between 8:00 to 15:00</small>
         </div>
       </div>
 
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
-          <label>Details<span class="text-danger">*</span></label>
-          <textarea
-            type="textarea"
-            class="form-control"
-            placeholder="Details"
-            formControlName="details"
-          ></textarea>
+          <label>Booking Details<span class="text-danger">*</span></label>
+          <textarea type="textarea" class="form-control" placeholder="Booking Details" formControlName="details"></textarea>
         </div>
       </div>
       <div class="modal-footer-custom">
-        <button
-          *ngIf="!isEditClick"
-          type="button"
-          class="btn btn-primary"
-          (click)="saveEvent(calendarForm)"
-          [disabled]="!calendarForm.valid"
-        >
-          Save
-        </button>
-        <button
-          *ngIf="isEditClick"
-          type="button"
-          class="btn btn-primary"
-          (click)="eventClick(calendarForm)"
-          [disabled]="!calendarForm.valid"
-        >
-          Edit
-        </button>
-        <button
-          type="button"
-          class="btn btn-light"
-          (click)="modal.close('Close click')"
-        >
-          Close
-        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')" style="margin-right: 5px;">Close</button>
+
+        <button *ngIf="!isEditClick" type="button" class="btn btn-primary" (click)="saveEvent(calendarForm)" [disabled]="!calendarForm.valid">Save</button>
+        <button *ngIf="isEditClick" type="button" class="btn btn-primary" (click)="eventClick(calendarForm)" [disabled]="!calendarForm.valid">Save</button><!--to edit the booking-->
+
       </div>
     </form>
   </div>
@@ -128,35 +93,18 @@
     <h4 class="modal-title" id="modal-basic-title">
       <div class="table-modal-header">
         <div class="modal-about">
-          <div class="fw-bold p-t-10 font-17">Approve or Rejecy Booking</div>
+          <div class="fw-bold p-t-10 font-17">Approve or Reject Booking</div>
         </div>
       </div>
     </h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
       <span aria-hidden="true"><i class="material-icons">close</i></span>
     </button>
   </div>
   <div class="modal-body">
-    <div class="modal-footer-custom" style="justify-content: space-between !important;">
-      <button
-        type="button"
-        class="btn btn-danger"
-        (click)="approveAndRejectBooking(3)"
-      >
-        Reject
-      </button>
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="approveAndRejectBooking(2)"
-      >
-        Approve
-      </button>
+    <div class="modal-footer-custom" >
+      <button type="button" class="btn btn-danger" (click)="approveAndRejectBooking(3)">Reject</button>
+      <button type="button" class="btn btn-success" (click)="approveAndRejectBooking(2)" style="margin-right: 5px; margin-left: 5px;">Approve</button>
     </div>
   </div>
 </ng-template>
@@ -169,33 +117,14 @@
         </div>
       </div>
     </h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
       <span aria-hidden="true"><i class="material-icons">close</i></span>
     </button>
   </div>
   <div class="modal-body">
-    <div
-    class="modal-footer-custom" style="justify-content: space-between !important;"
-    >
-    <button
-          type="button"
-          class="btn btn-light"
-          (click)="modal.close('Close click')"
-        >
-          Close
-        </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="completeSession()"
-      >
-        Complete Session
-      </button>
+    <div class="modal-footer-custom">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      <button type="button" class="btn btn-primary" (click)="completeSession()" style="margin-right: 5px; margin-left: 5px;">Mark Session as Complete</button>
     </div>
   </div>
 </ng-template>

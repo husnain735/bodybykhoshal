@@ -16,35 +16,39 @@
       <div>
         <span class="userName">Team BBK</span>
       </div>
+
     </div>
     <div #scrollMe class="card-body chat-content">
       <div id="scrollToSection" *ngFor="let chat of chats; let i = index">
-        <div *ngIf="
-            (isFormOpenChild && chat.roleId == 1) ||
-            (isAdminChatChild && chat.roleId == 2)
-          " class="chat-item chat-left">
+        <div *ngIf="(isFormOpenChild && chat.roleId == 1) || (isAdminChatChild && chat.roleId == 2)" class="chat-item chat-left">
           <span class="right-chat">{{ chat.senderName }}</span>
           <div class="chat-details">
-            <div *ngIf="chat.chatType == 1" class="chat-text">{{ chat.content }}</div>
-            <div *ngIf="chat.chatType == 2"> <img class="chatBox-image" src="{{baseUrl + chat.content}}" alt=""
-                srcset=""></div>
+            <div *ngIf="chat.chatType == 1" class="chat-text other-chat">{{ chat.content }}</div>
+
+            <div *ngIf="chat.chatType == 2" class="other-chat">
+              <a href="{{baseUrl + chat.content}}" target="_blank" rel="noreferrer noopener">
+                <img class="chatBox-image" src="{{baseUrl + chat.content}}" >
+             </a>
+            </div>
             <div class="chat-time" title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}">
               {{ chat.timestamp | date : "HH:mm" }}
             </div>
           </div>
         </div>
-        <div *ngIf="
-            (isFormOpenChild && chat.roleId == 2) ||
-            (isAdminChatChild && chat.roleId == 1)
-          " class="chat-item chat-right">
+
+        <div *ngIf="(isFormOpenChild && chat.roleId == 2) || (isAdminChatChild && chat.roleId == 1)" class="chat-item chat-right">
           <span class="left-chat">{{ chat.senderName }}</span>
-          <div class="chat-details">
+          <div class="chat-details" >
             <div *ngIf="chat.chatType == 1" class="chat-text">{{ chat.content }}</div>
-            <div *ngIf="chat.chatType == 2"> <img class="chatBox-image" src="{{baseUrl + chat.content}}" alt=""
-                srcset=""></div>
+            <div *ngIf="chat.chatType == 2">
+              <a href="{{baseUrl + chat.content}}" target="_blank" rel="noreferrer noopener">
+                <img class="chatBox-image" src="{{baseUrl + chat.content}}">
+             </a>
+              </div>
             <div class="chat-time" title="{{ chat.timestamp | date : 'MM-dd-yyyy HH:mm' }}">
               {{ chat.timestamp | date : "HH:mm" }}
             </div>
+
           </div>
         </div>
       </div>
@@ -68,10 +72,8 @@
           " style="padding-right: 82px; resize: none" class="form-control" placeholder="Type a message" name="chat"
           [(ngModel)]="chat"></textarea>
         <div>
-          <div class="chatBox-upload-icon">
-            <span class="material-icons">file_upload</span>
-            <input type="file" class="chatBox-upload-input" accept="image/*" (change)="handleFileChange($event)"
-              multiple="false" />
+          <div (click)="triggerUpload()" class="chatBox-upload-icon" style="cursor: pointer;" title="send image">
+            <i class="far fa-image"></i>
           </div>
           <button class="btn btn-danger" (click)="
               isFormOpenChild
@@ -86,4 +88,7 @@
       </form>
     </div>
   </div>
+  <input type="file" class="chatBox-upload-input"  accept="image/*" (change)="handleFileChange($event)"
+multiple="false" />
+
 </div>

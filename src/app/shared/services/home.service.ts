@@ -43,4 +43,7 @@ export class HomeService {
   GetCustomerPackage(){
     return this.apiService.get(`${this.pageUrl}GetCustomerPackage`);
   }
+  syncwithGoogle(){
+    return this.apiService.get(`${this.pageUrl}syncwithGoogle`);
+  }
 }

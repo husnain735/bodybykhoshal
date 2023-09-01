@@ -125,4 +125,16 @@ export class CustomerDashboardComponent implements OnInit {
       error: (error: any) => {},
     });
   }
+  syncwithGoogle() {
+    this.homeService.syncwithGoogle().subscribe({
+      next:(res: any) => {
+        if (res.body.success == true && res.body.redirectUrl != undefined) {
+          window.open(res.body.redirectUrl, "_blank");
+        }
+        
+      }, error:(error: any) => {
+
+      }
+    });
+  }
 }

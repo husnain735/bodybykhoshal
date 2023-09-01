@@ -44,6 +44,7 @@ export class AddToCartComponent {
   AddToCart() {
     this.homeService.AddToCart(this.PackageId).subscribe({
       next:(res:any) => {
+
         this.router.navigate(['/home/customer-dashboard']);
       }, error:(error) => {
 

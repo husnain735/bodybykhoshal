@@ -24,7 +24,7 @@ import { Subscription, debounceTime, interval, startWith, switchMap } from 'rxjs
 import { AdminService } from '../../services/admin.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-
+import * as $ from 'jquery'
 @Component({
   selector: 'app-chat-box',
   templateUrl: './chat-box.component.html',
@@ -54,6 +54,8 @@ export class ChatBoxComponent implements OnInit {
   uploadCustomerUrl: string;
   ChatType = 1;
   baseUrl = environment.ResourceServer.BaseApiUrl;
+
+
   constructor(
     private elementRef: ElementRef,
     private homeService: HomeService,
@@ -65,7 +67,10 @@ export class ChatBoxComponent implements OnInit {
     this.uploadAdminUrl = environment.ResourceServer.Endpoint + 'Admin/UploadChat';
     this.uploadCustomerUrl = environment.ResourceServer.Endpoint + 'Home/UploadChat';
   }
+  triggerUpload() {
 
+    $('.chatBox-upload-input').click();
+  }
   sendMessage() {
     const newMessage: Message = {
       content: this.message,
@@ -99,7 +104,7 @@ export class ChatBoxComponent implements OnInit {
             }
           }
           this.chats = response.body.success;
-          return interval(2000);
+          return interval(99990000);
         })
       )
       .subscribe(() => {

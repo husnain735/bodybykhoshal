@@ -1,4 +1,11 @@
 <ng-container>
+  <div class="row mx-0 my-2">
+    <div class="col-12 text-end">
+      <button type="button" class="btn btn-primary" (click)="syncwithGoogle()">
+      Sync with google
+    </button>
+    </div>
+  </div>
   <app-calendar
     [customerCalendar]="customerCalendarEvent"
     [calendarEvents]="calendarEventsInput"

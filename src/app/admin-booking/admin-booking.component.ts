@@ -28,5 +28,16 @@ export class AdminBookingComponent implements OnInit {
       error: (error: any) => {},
     });
   }
+  syncwithGoogle() {
+    this.adminService.syncwithGoogle().subscribe({
+      next:(res: any) => {
+        if (res.body.success == true && res.body.redirectUrl != undefined) {
+          window.open(res.body.redirectUrl, "_blank");
+        }
+        
+      }, error:(error: any) => {
 
+      }
+    });
+  }
 }

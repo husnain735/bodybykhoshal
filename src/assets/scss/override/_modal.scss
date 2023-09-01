@@ -15,7 +15,8 @@
 
 .modal-header {
   border-bottom: none;
-  padding-bottom: 5px;
+  padding: 5px 5px 0px 0;
+  background-color: #f7f7f7;
 
   h5 {
     font-size: 18px;
@@ -58,4 +59,8 @@
 
 .modal-part {
   display: none;
+}
+.modal-title {
+  margin: 0 0 10px !important;
+  color: #404040;
 }

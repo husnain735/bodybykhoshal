@@ -35,7 +35,7 @@ import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
 import { AdminService } from '../../services/admin.service';
 import { ToastrService } from 'ngx-toastr';
-
+import * as $ from 'jquery'
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -94,6 +94,7 @@ export class CalendarComponent implements OnInit {
   @Input() customerCalendar;
   calendarOptions: CalendarOptions;
   datetimeRangError: boolean;
+  bookingTimeError: boolean;
   statusId: number;
   bookingStatus = [
     { id: 2, value: 'Approve' },
@@ -125,6 +126,7 @@ export class CalendarComponent implements OnInit {
   }
   initailizCalendar() {
     if (this.customerCalendar) {
+
       // const currentDate = new Date();
       // const startMorning = new Date(currentDate);
       // startMorning.setHours(5, 0, 0); // Set morning start time to 5:00 AM
@@ -221,75 +223,95 @@ export class CalendarComponent implements OnInit {
         firstDay: new Date().getDay(),
       };
     }
+
   }
   handleDateSelect(selectInfo: DateSelectArg) {
     this.eventWindowCall(selectInfo, 'addEvent');
   }
   eventWindowCall(row: any, type: string) {
-    var statusId;
-    this.datetimeRangError = false;
-    if (type === 'editEvent') {
-      statusId = +row.event.groupId;
-      if (this.customerCalendar) {
-        this.dialogTitle = row.event.title;
-        this.isEditClick = true;
+
+    const startDateObj =  moment(row.start);
+    let morningStart = moment(startDateObj);
+
+    if (morningStart.minutes() == 30 && morningStart.hours() == 7) {
+      morningStart.set({h: 7, m: 0});
+      row.start = moment(morningStart).format("yyyy-MM-DD HH:mm:ss");
+    }
+
+    if (morningStart.hours() == 14) {
+      morningStart.set({h: 15, m: 0});
+      row.start = moment(morningStart).format("yyyy-MM-DD HH:mm:ss");
+    }
+
+    morningStart.set({h: morningStart.hours() + 1});
+    row.end = moment(morningStart).format("yyyy-MM-DD HH:mm:ss");
+
+    if (this.validateBookingTime(row.start, row.end) || type == 'editEvent') {
+
+      var statusId;
+      this.datetimeRangError = false;
+      this.bookingTimeError = false;
+
+      if (type === 'editEvent') {
+        statusId = +row.event.groupId;
+        if (this.customerCalendar) {
+          this.dialogTitle = row.event.title;
+          this.isEditClick = true;
+          this.calendarForm.setValue({
+            id: row.event.id,
+            title: row.event.title,
+            startDate: formatDate(row.event.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
+            endDate: formatDate(row.event.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
+            details: row.event.extendedProps.details,
+          });
+        } else if (!this.customerCalendar) {
+          this.bookinStatusForm.setValue({
+            Id: +row.event.id,
+            Status: ['', [Validators.required]],
+          });
+        }
+      } else {
+        var endDate = this.addOneHourToDate(row.start);
+        statusId = 1;
         this.calendarForm.setValue({
-          id: row.event.id,
-          title: row.event.title,
-          startDate: formatDate(row.event.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
-          endDate: formatDate(row.event.end, 'yyyy-MM-dd HH:mm:ss', 'en'),
-          details: row.event.extendedProps.details,
+          id: 0,
+          title: '',
+          startDate: formatDate(row.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
+          endDate: formatDate(endDate, 'yyyy-MM-dd HH:mm:ss', 'en'),
+          details: '',
         });
-      } else if (!this.customerCalendar) {
-        this.bookinStatusForm.setValue({
-          Id: +row.event.id,
-          Status: ['', [Validators.required]],
+        this.isEditClick = false;
+      }
+      if (this.customerCalendar && statusId == 1) {
+        this.modalService.open(this.eventWindow, {
+          ariaLabelledBy: 'modal-basic-title',
+          size: 'lg',
         });
       }
-    } else {
-      var endDate = this.addOneHourToDate(row.start);
-      statusId = 1;
-      this.calendarForm.setValue({
-        id: 0,
-        title: '',
-        startDate: formatDate(row.start, 'yyyy-MM-dd HH:mm:ss', 'en'),
-        endDate: formatDate(endDate, 'yyyy-MM-dd HH:mm:ss', 'en'),
-        details: '',
-      });
-      this.isEditClick = false;
+      if (!this.customerCalendar && statusId == 1) {
+        this.modalService.open(this.eventWindow2, {
+          ariaLabelledBy: 'modal-basic-title',
+          size: 'md',
+        });
+      }
+      if (!this.customerCalendar && statusId == 2) {
+        this.BookingId = +row.event.id;
+        this.modalService.open(this.eventWindow3, {
+          ariaLabelledBy: 'modal-basic-title',
+          size: 'md',
+        });
+      }
     }
-    if (this.customerCalendar && statusId == 1) {
-      this.modalService.open(this.eventWindow, {
-        ariaLabelledBy: 'modal-basic-title',
-        size: 'lg',
-      });
-    }
-    if (!this.customerCalendar && statusId == 1) {
-      this.modalService.open(this.eventWindow2, {
-        ariaLabelledBy: 'modal-basic-title',
-        size: 'md',
-      });
-    }
-    if (!this.customerCalendar && statusId == 2) {
-      this.BookingId = +row.event.id;
-      this.modalService.open(this.eventWindow3, {
-        ariaLabelledBy: 'modal-basic-title',
-        size: 'md',
-      });
-    }
+
   }
   saveEvent(form: UntypedFormGroup) {
     this.calendarData = form.value;
-    if (
-      this.validateDateRange(
-        this.calendarData.startDate,
-        this.calendarData.endDate
-      )
-    ) {
+    if (this.validateDateRange(this.calendarData.startDate, this.calendarData.endDate)
+        && this.validateBookingTime(this.calendarData.startDate, this.calendarData.endDate)) {
       var obj = {
         Title: this.calendarData.title,
-        Start: this.calendarData.startDate,
-        End: this.calendarData.endDate,
+        Start: moment(this.calendarData.startDate).format("yyyy-MM-DD HH:mm:ss") ,
+        End: moment(this.calendarData.endDate).format("yyyy-MM-DD HH:mm:ss"),
         Details: this.calendarData.details,
       };
       this.homeService.saveCustomerBooking(obj).subscribe({
@@ -338,16 +360,14 @@ export class CalendarComponent implements OnInit {
   }
   Editbooking(eventIndex: number, calendarData: any) {
     if (
-      this.validateDateRange(
-        this.calendarData.startDate,
-        this.calendarData.endDate
-      )
+      this.validateDateRange(this.calendarData.startDate, this.calendarData.endDate)
+        && this.validateBookingTime(this.calendarData.startDate, this.calendarData.endDate)
     ) {
       var obj = {
         Id: calendarData.id,
         Title: calendarData.title,
-        Start: calendarData.startDate,
-        End: calendarData.endDate,
+        Start: moment(this.calendarData.startDate).format("yyyy-MM-DD HH:mm:ss") ,
+        End: moment(this.calendarData.endDate).format("yyyy-MM-DD HH:mm:ss"),
         Details: calendarData.details,
       };
       this.homeService.saveCustomerBooking(obj).subscribe({
@@ -394,7 +414,17 @@ export class CalendarComponent implements OnInit {
     this.eventWindowCall(clickInfo, 'editEvent');
   }
   handleEvents(events: EventApi[]) {
-    // this.currentEvents = events;
+    $('.fc-timegrid-slots td').each(function() {
+      if($(this).data('time').substr(0, 2) >= '08' && $(this).data('time').substr(0, 2) < '15') {
+
+          if ($(this).hasClass('fc-timegrid-slot-lane')) {
+            $(this).css('background-color','#c4c4c4').addClass('rest-in-peace');
+          }
+
+      }
+    });
+    $(window).resize();
+
   }
   createCalendarForm(calendar: Calendar): UntypedFormGroup {
     return this.fb.group({
@@ -452,6 +482,8 @@ export class CalendarComponent implements OnInit {
         const calendarEvents = this.calendarEvents.slice();
         this.calendarOptions.events = calendarEvents;
       }
+
+
     }
   }
   validateDateRange(startDate, endDate) {
@@ -471,6 +503,44 @@ export class CalendarComponent implements OnInit {
         this.datetimeRangError = true;
         return false;
       }
+    }
+  }
+  validateBookingTime(startDate, endDate) {
+    if (startDate && endDate) {
+      const startDateObj =  moment(startDate);
+
+      let morningStart = moment(startDateObj);
+      morningStart.set({h: 5, m: 0});
+      let morningEnd = moment(startDateObj);
+      morningEnd.set({h: 7, m: 0});
+
+      let noonStart = moment(startDateObj);
+      noonStart.set({h: 15, m: 0});
+      let noonEnd = moment(startDateObj);
+      noonEnd.set({h: 18, m: 0});
+
+      let startLimit3 = moment(startDateObj);
+      startLimit3.set({h: 18, m: 0});
+
+      let bookingTime = startDateObj.format('hh:mm');
+      let morningStartTime = morningStart.format('hh:mm');
+      let morningEndTime = morningEnd.format('hh:mm');
+
+      let noonStartTime = noonStart.format('hh:mm');
+      let noonEndTime = noonEnd.format('hh:mm');
+
+      let inMorning = bookingTime >= morningStartTime && bookingTime <= morningEndTime;
+      let inEvening = bookingTime >= noonStartTime && bookingTime <= noonEndTime;
+
+      if (inMorning || inEvening) {
+        this.bookingTimeError = false;
+        return true;
+      } else {
+        this.bookingTimeError = true;
+        return false;
+      }
+
+
     }
   }
   approveAndRejectBooking(Status) {
@@ -537,6 +607,8 @@ export class CalendarComponent implements OnInit {
         this.calendarOptions.initialEvents = this.calendarEvents;
         const calendarEvents = this.calendarEvents.slice();
         this.calendarOptions.events = calendarEvents;
+
+
       },
       error: (error: any) => {},
     });

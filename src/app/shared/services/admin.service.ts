@@ -50,4 +50,7 @@ export class AdminService {
   DeletePackage(PackageId: number){
     return this.apiService.get(`${this.pageUrl}DeletePackage/${PackageId}`);
   }
+  syncwithGoogle(){
+    return this.apiService.get(`${this.pageUrl}syncwithGoogle`);
+  }
 }
